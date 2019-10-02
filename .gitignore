@@ -69,6 +69,10 @@ docs/_build/
 # PyBuilder
 target/
 
+# PyCharm
+.DS_Store
+.idea
+
 # Jupyter Notebook
 .ipynb_checkpoints
 
@@ -102,3 +106,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Application logs
+log/
+
+# GCP access files
+credentials/
