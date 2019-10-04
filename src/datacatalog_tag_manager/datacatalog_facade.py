@@ -8,8 +8,16 @@ class DataCatalogFacade:
         # Initialize the API client.
         self.__datacatalog = datacatalog_v1beta1.DataCatalogClient()
 
-    def create_tag(self, parent_entry_name, tag):
-        return self.__datacatalog.create_tag(parent=parent_entry_name, tag=tag)
+    def create_or_update_tag(self, parent_entry_name, tag):
+        entry_tags = self.__datacatalog.list_tags(parent=parent_entry_name)
+
+        try:
+            persisted_tag = next(entry_tag for entry_tag in entry_tags
+                                 if entry_tag.template == tag.template and entry_tag.column == tag.column)
+            tag.name = persisted_tag.name
+            return self.__datacatalog.update_tag(tag=tag)
+        except StopIteration:
+            return self.__datacatalog.create_tag(parent=parent_entry_name, tag=tag)
 
     def get_tag_template(self, name):
         return self.__datacatalog.get_tag_template(name)

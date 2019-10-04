@@ -36,7 +36,7 @@ class TagDatasourceProcessor:
 
             tags = self.__create_tags_from_templates_dataframe(templates_subset)
 
-            created_tags.extend([self.__datacatalog.create_tag(catalog_entry.name, tag) for tag in tags])
+            created_tags.extend([self.__datacatalog.create_or_update_tag(catalog_entry.name, tag) for tag in tags])
 
         return created_tags
 
