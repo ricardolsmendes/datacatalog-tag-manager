@@ -94,5 +94,5 @@ class DataCatalogEntityFactory:
         :param field: The field.
         :param value: A datetime of datetime-like string value.
         """
-        dt_string = value.strftime("%Y-%m-%dT%H:%M:%S%z") if isinstance(value, datetime) else value
-        field.timestamp_value.FromJsonString(dt_string)
+        dt = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S%z') if isinstance(value, str) else value
+        field.timestamp_value.FromDatetime(dt)
