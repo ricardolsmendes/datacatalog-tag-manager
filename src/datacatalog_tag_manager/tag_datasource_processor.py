@@ -1,4 +1,7 @@
+import logging
 import pandas as pd
+
+from google.api_core.exceptions import PermissionDenied
 
 from .constant import *
 from .datacatalog_entity_factory import DataCatalogEntityFactory
@@ -8,7 +11,7 @@ from .datacatalog_facade import DataCatalogFacade
 class TagDatasourceProcessor:
 
     def __init__(self):
-        self.__datacatalog = DataCatalogFacade()
+        self.__datacatalog_facade = DataCatalogFacade()
 
     def create_tags_from_csv(self, file_path):
         """
@@ -25,9 +28,12 @@ class TagDatasourceProcessor:
 
         created_tags = []
         for linked_resource in ordered_df.index.unique().tolist():
-            catalog_entry = self.__datacatalog.lookup_entry(linked_resource)
-
-            # TODO Add Catalog Entry validation
+            try:
+                catalog_entry = self.__datacatalog_facade.lookup_entry(linked_resource)
+            except PermissionDenied:
+                logging.warning('Permission denied when looking up Entry for %s.'
+                                ' The resource will be ignored.', linked_resource)
+                continue
 
             templates_subset = ordered_df.loc[linked_resource, TAG_DS_TEMPLATE_NAME_COLUMN_LABEL:]
             templates_subset.set_index(TAG_DS_TEMPLATE_NAME_COLUMN_LABEL, inplace=True)
@@ -36,16 +42,20 @@ class TagDatasourceProcessor:
 
             tags = self.__create_tags_from_templates_dataframe(templates_subset)
 
-            created_tags.extend([self.__datacatalog.create_or_update_tag(catalog_entry.name, tag) for tag in tags])
+            created_tags.extend([self.__datacatalog_facade.create_or_update_tag(catalog_entry.name, tag)
+                                 for tag in tags])
 
         return created_tags
 
     def __create_tags_from_templates_dataframe(self, dataframe):
         tags = []
         for template_name in dataframe.index.unique().tolist():
-            tag_template = self.__datacatalog.get_tag_template(template_name)
-
-            # TODO Add Tag Template validation
+            try:
+                tag_template = self.__datacatalog_facade.get_tag_template(template_name)
+            except PermissionDenied:
+                logging.warning('Permission denied when getting Tag Template %s.'
+                                ' Unable to create Tags using it.', template_name)
+                continue
 
             columns_subset = dataframe.loc[template_name, TAG_DS_SCHEMA_COLUMN_COLUMN_LABEL:]
             dataframe.drop(template_name, inplace=True)

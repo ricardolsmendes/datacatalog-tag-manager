@@ -1,3 +1,5 @@
+import logging
+
 from datetime import datetime
 
 from google.cloud import datacatalog_v1beta1
@@ -7,25 +9,37 @@ class DataCatalogEntityFactory:
     __TRUTHS = {1, '1', 't', 'T', 'true', 'True', 'TRUE'}
 
     @classmethod
-    def make_tag(cls, tag_template, fields_map, column=None):
+    def make_tag(cls, tag_template, fields_dict, column=None):
         tag = datacatalog_v1beta1.types.Tag()
 
         tag.template = tag_template.name
         if column:
             tag.column = column
 
-        # TODO Add Template vs. Tag fields validation
-
-        cls.__set_tag_fields(tag, tag_template, fields_map)
+        cls.__set_tag_fields(tag, tag_template, fields_dict)
 
         return tag
 
     @classmethod
-    def __set_tag_fields(cls, tag, tag_template, fields_map):
-        for field_id, field_value in fields_map.items():
+    def __set_tag_fields(cls, tag, tag_template, fields_dict):
+        valid_fields_dict = cls.get_valid_tag_fields_dict(tag_template, fields_dict)
+        for field_id, field_value in valid_fields_dict.items():
             field = tag.fields[field_id]
             field_type = tag_template.fields[field_id].type
             cls.__set_field_value(field, field_type, field_value)
+
+    @classmethod
+    def get_valid_tag_fields_dict(cls, tag_template, fields_dict):
+        valid_fields_dict = {}
+
+        for field_id, field_value in fields_dict.items():
+            if field_id in tag_template.fields:
+                valid_fields_dict[field_id] = field_value
+            else:
+                logging.warning('Field %s (%s) was not found in the Tag Template %s and will be ignored.',
+                                field_id, str(field_value), tag_template.name)
+
+        return valid_fields_dict
 
     @classmethod
     def __set_field_value(cls, field, template_field_type, value):
