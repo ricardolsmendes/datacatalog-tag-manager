@@ -20,7 +20,7 @@ class DataCatalogFacade:
             return self.__datacatalog.create_tag(parent=parent_entry_name, tag=tag)
 
     def get_tag_template(self, name):
-        return self.__datacatalog.get_tag_template(name)
+        return self.__datacatalog.get_tag_template(name=name)
 
     def lookup_entry(self, linked_resource):
         return self.__datacatalog.lookup_entry(linked_resource=linked_resource)
