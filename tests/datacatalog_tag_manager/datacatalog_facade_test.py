@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import patch
 
-from google.cloud import datacatalog_v1beta1
+from google.cloud.datacatalog import types
 
 from datacatalog_tag_manager.datacatalog_facade import DataCatalogFacade
 
@@ -52,7 +52,7 @@ class DataCatalogFacadeTest(TestCase):
 
 
 def make_fake_tag():
-    tag = datacatalog_v1beta1.types.Tag()
+    tag = types.Tag()
     tag.template = 'test-template'
     tag.fields['test-bool-field'].bool_value = True
     tag.fields['test-double-field'].double_value = 1

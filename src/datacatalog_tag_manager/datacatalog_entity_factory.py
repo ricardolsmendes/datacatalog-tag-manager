@@ -2,7 +2,7 @@ import logging
 
 from datetime import datetime
 
-from google.cloud import datacatalog_v1beta1
+from google.cloud.datacatalog import enums, types
 
 
 class DataCatalogEntityFactory:
@@ -10,7 +10,7 @@ class DataCatalogEntityFactory:
 
     @classmethod
     def make_tag(cls, tag_template, fields_dict, column=None):
-        tag = datacatalog_v1beta1.types.Tag()
+        tag = types.Tag()
 
         tag.template = tag_template.name
         if column:
@@ -32,6 +32,9 @@ class DataCatalogEntityFactory:
     def get_valid_tag_fields_dict(cls, tag_template, fields_dict):
         valid_fields_dict = {}
 
+        if not fields_dict:
+            return valid_fields_dict
+
         for field_id, field_value in fields_dict.items():
             if field_id in tag_template.fields:
                 valid_fields_dict[field_id] = field_value
@@ -44,10 +47,10 @@ class DataCatalogEntityFactory:
     @classmethod
     def __set_field_value(cls, field, template_field_type, value):
         set_primitive_field_value_functions = {
-            cls.__get_primitive_field_type_for('BOOL'): cls.__set_bool_field_value,
-            cls.__get_primitive_field_type_for('DOUBLE'): cls.__set_double_field_value,
-            cls.__get_primitive_field_type_for('STRING'): cls.__set_string_field_value,
-            cls.__get_primitive_field_type_for('TIMESTAMP'): cls.__set_timestamp_field_value
+            enums.FieldType.PrimitiveType['BOOL']: cls.__set_bool_field_value,
+            enums.FieldType.PrimitiveType['DOUBLE']: cls.__set_double_field_value,
+            enums.FieldType.PrimitiveType['STRING']: cls.__set_string_field_value,
+            enums.FieldType.PrimitiveType['TIMESTAMP']: cls.__set_timestamp_field_value
         }
 
         primitive_type = template_field_type.primitive_type
@@ -58,15 +61,8 @@ class DataCatalogEntityFactory:
             cls.__set_enum_field_value(field, value)
 
     @classmethod
-    def __get_primitive_field_type_for(cls, string):
-        try:
-            return datacatalog_v1beta1.enums.FieldType.PrimitiveType[string.upper()]
-        except KeyError:
-            return None
-
-    @classmethod
     def __is_primitive_type_specified(cls, primitive_type):
-        return datacatalog_v1beta1.enums.FieldType.PrimitiveType.PRIMITIVE_TYPE_UNSPECIFIED != primitive_type
+        return enums.FieldType.PrimitiveType.PRIMITIVE_TYPE_UNSPECIFIED != primitive_type
 
     @classmethod
     def __set_bool_field_value(cls, field, value):
