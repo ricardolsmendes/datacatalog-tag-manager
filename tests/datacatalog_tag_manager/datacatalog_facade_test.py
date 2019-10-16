@@ -5,7 +5,7 @@ from google.cloud.datacatalog import types
 
 from datacatalog_tag_manager.datacatalog_facade import DataCatalogFacade
 
-_PATCHED_DATACATALOG_CLIENT = 'datacatalog_tag_manager.datacatalog_facade.datacatalog_v1beta1.DataCatalogClient'
+_PATCHED_DATACATALOG_CLIENT = 'datacatalog_tag_manager.datacatalog_facade.DataCatalogClient'
 
 
 @patch(f'{_PATCHED_DATACATALOG_CLIENT}.__init__', lambda self: None)

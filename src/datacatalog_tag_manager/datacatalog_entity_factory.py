@@ -47,10 +47,10 @@ class DataCatalogEntityFactory:
     @classmethod
     def __set_field_value(cls, field, template_field_type, value):
         set_primitive_field_value_functions = {
-            enums.FieldType.PrimitiveType['BOOL']: cls.__set_bool_field_value,
-            enums.FieldType.PrimitiveType['DOUBLE']: cls.__set_double_field_value,
-            enums.FieldType.PrimitiveType['STRING']: cls.__set_string_field_value,
-            enums.FieldType.PrimitiveType['TIMESTAMP']: cls.__set_timestamp_field_value
+            enums.FieldType.PrimitiveType.BOOL: cls.__set_bool_field_value,
+            enums.FieldType.PrimitiveType.DOUBLE: cls.__set_double_field_value,
+            enums.FieldType.PrimitiveType.STRING: cls.__set_string_field_value,
+            enums.FieldType.PrimitiveType.TIMESTAMP: cls.__set_timestamp_field_value
         }
 
         primitive_type = template_field_type.primitive_type
