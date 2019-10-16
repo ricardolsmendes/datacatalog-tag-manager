@@ -32,10 +32,10 @@ class TagDatasourceProcessor:
                 catalog_entry = self.__datacatalog_facade.lookup_entry(linked_resource)
             except PermissionDenied:
                 logging.warning('Permission denied when looking up Entry for %s.'
-                                ' The resource will be ignored.', linked_resource)
+                                ' The resource will be skipped.', linked_resource)
                 continue
 
-            templates_subset = ordered_df.loc[linked_resource, TAG_DS_TEMPLATE_NAME_COLUMN_LABEL:]
+            templates_subset = ordered_df.loc[[linked_resource], TAG_DS_TEMPLATE_NAME_COLUMN_LABEL:]
             templates_subset.set_index(TAG_DS_TEMPLATE_NAME_COLUMN_LABEL, inplace=True)
 
             ordered_df.drop(linked_resource, inplace=True)  # Save memory by deleting data already copied to a subset.
@@ -57,7 +57,7 @@ class TagDatasourceProcessor:
                                 ' Unable to create Tags using it.', template_name)
                 continue
 
-            columns_subset = dataframe.loc[template_name, TAG_DS_SCHEMA_COLUMN_COLUMN_LABEL:]
+            columns_subset = dataframe.loc[[template_name], TAG_DS_SCHEMA_COLUMN_COLUMN_LABEL:]
             dataframe.drop(template_name, inplace=True)
 
             # (1) Add Tag to be attached to the resource
@@ -82,7 +82,7 @@ class TagDatasourceProcessor:
     def __create_tags_from_columns_dataframe(cls, tag_template, dataframe):
         tags = []
         for column_name in dataframe.index.unique().tolist():  # NaN is not expected among index values at this point.
-            column_subset = dataframe.loc[column_name, TAG_DS_FIELD_ID_COLUMN_LABEL:]
+            column_subset = dataframe.loc[[column_name], TAG_DS_FIELD_ID_COLUMN_LABEL:]
             dataframe.drop(column_name, inplace=True)
 
             tags.append(cls.__create_tag_from_fields_dataframe(tag_template, column_subset, column_name))

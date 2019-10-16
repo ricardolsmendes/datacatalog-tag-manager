@@ -30,7 +30,7 @@ class DataCatalogFacadeTest(TestCase):
         tag_1 = make_fake_tag()
 
         tag_2 = make_fake_tag()
-        tag_2.fields['test-string-field'].string_value = '[UPDATED] Test String Value'
+        tag_2.fields['test_string_field'].string_value = '[UPDATED] Test String Value'
 
         mock_list_tags.return_value = [tag_1]
 
@@ -53,11 +53,11 @@ class DataCatalogFacadeTest(TestCase):
 
 def make_fake_tag():
     tag = types.Tag()
-    tag.template = 'test-template'
-    tag.fields['test-bool-field'].bool_value = True
-    tag.fields['test-double-field'].double_value = 1
-    tag.fields['test-string-field'].string_value = 'Test String Value'
-    tag.fields['test-timestamp-field'].timestamp_value.FromJsonString('2019-10-15T01:00:00-03:00')
-    tag.fields['test-enum-field'].enum_value.display_name = 'Test ENUM Value'
+    tag.template = 'test_template'
+    tag.fields['test_bool_field'].bool_value = True
+    tag.fields['test_double_field'].double_value = 1
+    tag.fields['test_string_field'].string_value = 'Test String Value'
+    tag.fields['test_timestamp_field'].timestamp_value.FromJsonString('2019-10-15T01:00:00-03:00')
+    tag.fields['test_enum_field'].enum_value.display_name = 'Test ENUM Value'
 
     return tag

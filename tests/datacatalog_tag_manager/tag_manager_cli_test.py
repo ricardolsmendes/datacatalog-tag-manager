@@ -3,11 +3,9 @@ from unittest.mock import patch
 
 from datacatalog_tag_manager import TagManagerCLI
 
-_PATCHED_TAG_DATASOURCE_PROCESSOR = 'datacatalog_tag_manager.tag_manager_cli.TagDatasourceProcessor'
 
-
-@patch(f'{_PATCHED_TAG_DATASOURCE_PROCESSOR}.__init__', lambda self: None)
 class TagManagerCLITest(TestCase):
+    __PATCHED_TAG_DATASOURCE_PROCESSOR = 'datacatalog_tag_manager.tag_manager_cli.TagDatasourceProcessor'
 
     def test_parse_args_invalid_subcommand_should_raise_system_exit(self):
         self.assertRaises(SystemExit, TagManagerCLI._parse_args, ['invalid-subcommand'])
@@ -22,7 +20,8 @@ class TagManagerCLITest(TestCase):
     def test_run_no_args_should_raise_attribute_error(self):
         self.assertRaises(AttributeError, TagManagerCLI.run, None)
 
-    @patch(f'{_PATCHED_TAG_DATASOURCE_PROCESSOR}.create_tags_from_csv')
+    @patch(f'{__PATCHED_TAG_DATASOURCE_PROCESSOR}.__init__', lambda self: None)
+    @patch(f'{__PATCHED_TAG_DATASOURCE_PROCESSOR}.create_tags_from_csv')
     def test_run_create_tags_should_call_tag_creator(self, mock_create_tags_from_csv):
         TagManagerCLI.run(['create-tags', '--csv-file', 'test.csv'])
 
