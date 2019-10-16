@@ -1,4 +1,4 @@
-from google.cloud.datacatalog_v1beta1 import DataCatalogClient
+from google.cloud.datacatalog import DataCatalogClient
 
 
 class DataCatalogFacade:
