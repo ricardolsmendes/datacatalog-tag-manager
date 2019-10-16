@@ -9,17 +9,17 @@ _PATCHED_TAG_DATASOURCE_PROCESSOR = 'datacatalog_tag_manager.tag_manager_cli.Tag
 @patch(f'{_PATCHED_TAG_DATASOURCE_PROCESSOR}.__init__', lambda self: None)
 class TagManagerCLITest(TestCase):
 
-    def test_parse_args_with_invalid_subcommand_should_throw_system_exit(self):
-        self.assertRaises(SystemExit, TagManagerCLI.parse_args, ['invalid-subcommand'])
+    def test_parse_args_invalid_subcommand_should_raise_system_exit(self):
+        self.assertRaises(SystemExit, TagManagerCLI._parse_args, ['invalid-subcommand'])
 
-    def test_parse_args_create_tags_missing_mandatory_args_should_throw_system_exit(self):
-        self.assertRaises(SystemExit, TagManagerCLI.parse_args, ['create-tags'])
+    def test_parse_args_create_tags_missing_mandatory_args_should_raise_system_exit(self):
+        self.assertRaises(SystemExit, TagManagerCLI._parse_args, ['create-tags'])
 
     def test_parse_args_create_tags_should_parse_mandatory_args(self):
-        args = TagManagerCLI.parse_args(['create-tags', '--csv-file', 'test.csv'])
+        args = TagManagerCLI._parse_args(['create-tags', '--csv-file', 'test.csv'])
         self.assertEqual('test.csv', args.csv_file)
 
-    def test_run_with_no_args_should_throw_attribute_error(self):
+    def test_run_no_args_should_raise_attribute_error(self):
         self.assertRaises(AttributeError, TagManagerCLI.run, None)
 
     @patch(f'{_PATCHED_TAG_DATASOURCE_PROCESSOR}.create_tags_from_csv')
