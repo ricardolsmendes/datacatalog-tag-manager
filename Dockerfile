@@ -12,6 +12,6 @@ COPY . .
 RUN pip install .
 
 # Run the unit tests.
-# enable when the tests become available ---> RUN python setup.py test
+RUN python setup.py test
 
 ENTRYPOINT ["python", "main.py"]
