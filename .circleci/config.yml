@@ -28,5 +28,5 @@ jobs:
             python setup.py test
 
       - store_artifacts:
-          path: test-reports
+          path: htmlcov
           destination: test-reports
