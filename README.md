@@ -2,6 +2,8 @@
 
 A Python package to manage Google Cloud Data Catalog tags, loading metadata from external sources.
 
+[![CircleCI][1]][2]
+
 ## 1. Environment setup
 
 ### 1.1. Get the code
@@ -50,7 +52,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=./credentials/datacatalog-tag-manager.json
 
 ### 1.4. Docker
 
-Docker may be used as an alternative to run all the scripts. In this case please disregard the [Virtualenv](#13-virtualenv) install instructions.
+Docker may be used as an alternative to run all the scripts. In this case, please disregard the [Virtualenv](#13-virtualenv) install instructions.
 
 ## 2. Load Tags from CSV file
 
@@ -68,7 +70,7 @@ Tags are composed by as many lines as required to represent all of their fields.
 
 *TIPS* 
 - *`sample-input/create-tags` for reference;*
-- [Data Catalog Sample Tags](https://docs.google.com/spreadsheets/d/1bqeAXjLHUq0bydRZj9YBhdlDtuu863nwirx8t4EP_CQ) may help to create/export the CSV.
+- [Data Catalog Sample Tags][3] may help to create/export the CSV.
 
 ### 2.2. python main.py create-tags
 
@@ -87,3 +89,7 @@ docker run --rm --tty -v CSV_FILE_FOLDER:/data datacatalog-tag-manager \
   create-tags \
   --csv-file /data/CSV_FILE_NAME
 ```
+
+[1]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager.svg?style=svg
+[2]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager
+[3]: https://docs.google.com/spreadsheets/d/1bqeAXjLHUq0bydRZj9YBhdlDtuu863nwirx8t4EP_CQ
