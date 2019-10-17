@@ -16,14 +16,14 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            python3 -m virtualenv --python python3 env
-            . env/bin/activate
-            pip install --editable .
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install .
 
       - run:
           name: run tests
           command: |
-            . env/bin/activate
+            . venv/bin/activate
             python setup.py test
 
       - store_artifacts:
