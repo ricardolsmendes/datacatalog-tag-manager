@@ -64,35 +64,51 @@ class TagDatasourceProcessorTest(TestCase):
         self.assertEqual('Test value', created_tag_2.fields['string_field'].string_value)
         self.assertFalse('bool_field' in created_tag_2.fields)
 
+    @patch(f'{_PATCHED_DATACATALOG_FACADE}.create_or_update_tag', lambda self, *args: args[1])
+    @patch(f'{_PATCHED_DATACATALOG_FACADE}.get_tag_template', lambda self, *args: make_fake_tag_template())
     @patch(f'{_PATCHED_DATACATALOG_FACADE}.lookup_entry')
     @patch(f'{__PATCHED_PANDAS}.read_csv')
     def test_create_tags_from_csv_permission_denied_lookup_entry_should_skip_resource(
             self, mock_read_csv, mock_lookup_entry):
 
         mock_read_csv.return_value = pd.DataFrame(data={
-            'linked_resource': ['//resource-link']
+            'linked_resource': ['//unreachable-resource-link', '//resource-link'],
+            'template_name': ['', 'test_template'],
+            'field_id': ['', 'string_field'],
+            'field_value': ['', 'Test value']
         })
 
-        mock_lookup_entry.side_effect = PermissionDenied(message='')
+        mock_lookup_entry.side_effect = [PermissionDenied(message=''), make_fake_entry()]
 
         created_tags = TagDatasourceProcessor().create_tags_from_csv(None)
-        self.assertEqual(0, len(created_tags))
+        self.assertEqual(1, len(created_tags))
 
+        created_tag = created_tags[0]
+        self.assertEqual('test_template', created_tag.template)
+        self.assertEqual('Test value', created_tag.fields['string_field'].string_value)
+
+    @patch(f'{_PATCHED_DATACATALOG_FACADE}.create_or_update_tag', lambda self, *args: args[1])
     @patch(f'{_PATCHED_DATACATALOG_FACADE}.get_tag_template')
-    @patch(f'{_PATCHED_DATACATALOG_FACADE}.lookup_entry', lambda self, *args: None)
+    @patch(f'{_PATCHED_DATACATALOG_FACADE}.lookup_entry', lambda self, *args: make_fake_entry())
     @patch(f'{__PATCHED_PANDAS}.read_csv')
     def test_create_tags_from_csv_permission_denied_get_template_should_skip_template(
             self, mock_read_csv, mock_get_tag_template):
 
         mock_read_csv.return_value = pd.DataFrame(data={
-            'linked_resource': ['//resource-link'],
-            'template_name': ['test_template']
+            'linked_resource': ['//resource-link', '//resource-link'],
+            'template_name': ['unreachable_test_template', 'test_template'],
+            'field_id': ['', 'string_field'],
+            'field_value': ['', 'Test value']
         })
 
-        mock_get_tag_template.side_effect = PermissionDenied(message='')
+        mock_get_tag_template.side_effect = [PermissionDenied(message=''), make_fake_tag_template()]
 
         created_tags = TagDatasourceProcessor().create_tags_from_csv(None)
-        self.assertEqual(0, len(created_tags))
+        self.assertEqual(1, len(created_tags))
+
+        created_tag = created_tags[0]
+        self.assertEqual('test_template', created_tag.template)
+        self.assertEqual('Test value', created_tag.fields['string_field'].string_value)
 
 
 def make_fake_entry():
