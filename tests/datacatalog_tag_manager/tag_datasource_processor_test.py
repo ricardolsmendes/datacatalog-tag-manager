@@ -42,6 +42,25 @@ class TagDatasourceProcessorTest(TestCase):
     @patch(f'{_PATCHED_DATACATALOG_FACADE}.get_tag_template', lambda self, *args: make_fake_tag_template())
     @patch(f'{_PATCHED_DATACATALOG_FACADE}.lookup_entry', lambda self, *args: make_fake_entry())
     @patch(f'{__PATCHED_PANDAS}.read_csv')
+    def test_create_tags_from_csv_unsorted_should_succeed(self, mock_read_csv):
+        mock_read_csv.return_value = pd.DataFrame(data={
+            'field_id': ['string_field'],
+            'template_name': ['test_template'],
+            'field_value': ['Test value'],
+            'linked_resource': ['//resource-link']
+        })
+
+        created_tags = TagDatasourceProcessor().create_tags_from_csv(None)
+        self.assertEqual(1, len(created_tags))
+
+        created_tag = created_tags[0]
+        self.assertEqual('test_template', created_tag.template)
+        self.assertEqual('Test value', created_tag.fields['string_field'].string_value)
+
+    @patch(f'{_PATCHED_DATACATALOG_FACADE}.create_or_update_tag', lambda self, *args: args[1])
+    @patch(f'{_PATCHED_DATACATALOG_FACADE}.get_tag_template', lambda self, *args: make_fake_tag_template())
+    @patch(f'{_PATCHED_DATACATALOG_FACADE}.lookup_entry', lambda self, *args: make_fake_entry())
+    @patch(f'{__PATCHED_PANDAS}.read_csv')
     def test_create_tags_from_csv_with_column_should_succeed(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(data={
             'linked_resource': ['//resource-link', '//resource-link'],
