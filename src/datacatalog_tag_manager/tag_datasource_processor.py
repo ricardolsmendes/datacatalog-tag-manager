@@ -23,11 +23,11 @@ class TagDatasourceProcessor:
         return self.__create_tags_from_dataframe(pd.read_csv(file_path))
 
     def __create_tags_from_dataframe(self, dataframe):
-        ordered_df = dataframe.reindex(columns=TAG_DS_COLUMNS_ORDER, copy=False)
-        ordered_df.set_index(TAG_DS_LINKED_RESOURCE_COLUMN_LABEL, inplace=True)
+        normalized_df = self.__normalize_dataframe(dataframe)
+        normalized_df.set_index(TAG_DS_LINKED_RESOURCE_COLUMN_LABEL, inplace=True)
 
         created_tags = []
-        for linked_resource in ordered_df.index.unique().tolist():
+        for linked_resource in normalized_df.index.unique().tolist():
             try:
                 catalog_entry = self.__datacatalog_facade.lookup_entry(linked_resource)
             except PermissionDenied:
@@ -35,10 +35,11 @@ class TagDatasourceProcessor:
                                 ' The resource will be skipped.', linked_resource)
                 continue
 
-            templates_subset = ordered_df.loc[[linked_resource], TAG_DS_TEMPLATE_NAME_COLUMN_LABEL:]
+            templates_subset = normalized_df.loc[[linked_resource], TAG_DS_TEMPLATE_NAME_COLUMN_LABEL:]
             templates_subset.set_index(TAG_DS_TEMPLATE_NAME_COLUMN_LABEL, inplace=True)
 
-            ordered_df.drop(linked_resource, inplace=True)  # Save memory by deleting data already copied to a subset.
+            # Save memory by deleting data already copied to a subset.
+            normalized_df.drop(linked_resource, inplace=True)
 
             tags = self.__create_tags_from_templates_dataframe(templates_subset)
 
@@ -46,6 +47,19 @@ class TagDatasourceProcessor:
                                  for tag in tags])
 
         return created_tags
+
+    @classmethod
+    def __normalize_dataframe(cls, dataframe):
+        # Reorder dataframe columns.
+        ordered_df = dataframe.reindex(columns=TAG_DS_COLUMNS_ORDER, copy=False)
+
+        # Fill NA/NaN values by propagating the last valid observation forward to next valid.
+        filled_subset = ordered_df[TAG_DS_FILLABLE_COLUMNS].fillna(method='pad')
+
+        # Rebuild the dataframe by concatenating the fillable and non-fillable columns.
+        rebuilt_df = pd.concat([filled_subset, ordered_df[TAG_DS_NON_FILLABLE_COLUMNS]], axis=1)
+
+        return rebuilt_df
 
     def __create_tags_from_templates_dataframe(self, dataframe):
         tags = []
@@ -81,7 +95,7 @@ class TagDatasourceProcessor:
     @classmethod
     def __create_tags_from_columns_dataframe(cls, tag_template, dataframe):
         tags = []
-        for column_name in dataframe.index.unique().tolist():  # NaN is not expected among index values at this point.
+        for column_name in dataframe.index.unique().tolist():  # NaN not expected among index values at this point.
             column_subset = dataframe.loc[[column_name], TAG_DS_FIELD_ID_COLUMN_LABEL:]
             dataframe.drop(column_name, inplace=True)
 
