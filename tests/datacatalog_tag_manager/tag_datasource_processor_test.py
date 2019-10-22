@@ -42,7 +42,32 @@ class TagDatasourceProcessorTest(TestCase):
     @patch(f'{_PATCHED_DATACATALOG_FACADE}.get_tag_template', lambda self, *args: make_fake_tag_template())
     @patch(f'{_PATCHED_DATACATALOG_FACADE}.lookup_entry', lambda self, *args: make_fake_entry())
     @patch(f'{__PATCHED_PANDAS}.read_csv')
-    def test_create_tags_from_csv_unsorted_should_succeed(self, mock_read_csv):
+    def test_create_tags_from_csv_missing_values_should_succeed(self, mock_read_csv):
+        mock_read_csv.return_value = pd.DataFrame(data={
+            'linked_resource': ['//resource-link-1', None, '//resource-link-2', None],
+            'template_name': ['test_template', None, 'test_template', None],
+            'field_id': ['bool_field', 'string_field', 'bool_field', 'string_field'],
+            'field_value': ['true', 'Test value 1', 'false', 'Test value 2']
+        })
+
+        created_tags = TagDatasourceProcessor().create_tags_from_csv(None)
+        self.assertEqual(2, len(created_tags))
+
+        created_tag_1 = created_tags[0]
+        self.assertEqual('test_template', created_tag_1.template)
+        self.assertTrue(created_tag_1.fields['bool_field'].bool_value)
+        self.assertEqual('Test value 1', created_tag_1.fields['string_field'].string_value)
+
+        created_tag_2 = created_tags[1]
+        self.assertEqual('test_template', created_tag_2.template)
+        self.assertFalse(created_tag_2.fields['bool_field'].bool_value)
+        self.assertEqual('Test value 2', created_tag_2.fields['string_field'].string_value)
+
+    @patch(f'{_PATCHED_DATACATALOG_FACADE}.create_or_update_tag', lambda self, *args: args[1])
+    @patch(f'{_PATCHED_DATACATALOG_FACADE}.get_tag_template', lambda self, *args: make_fake_tag_template())
+    @patch(f'{_PATCHED_DATACATALOG_FACADE}.lookup_entry', lambda self, *args: make_fake_entry())
+    @patch(f'{__PATCHED_PANDAS}.read_csv')
+    def test_create_tags_from_csv_unordered_columns_should_succeed(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(data={
             'field_id': ['string_field'],
             'template_name': ['test_template'],
@@ -61,11 +86,11 @@ class TagDatasourceProcessorTest(TestCase):
     @patch(f'{_PATCHED_DATACATALOG_FACADE}.get_tag_template', lambda self, *args: make_fake_tag_template())
     @patch(f'{_PATCHED_DATACATALOG_FACADE}.lookup_entry', lambda self, *args: make_fake_entry())
     @patch(f'{__PATCHED_PANDAS}.read_csv')
-    def test_create_tags_from_csv_with_column_should_succeed(self, mock_read_csv):
+    def test_create_tags_from_csv_column_metadata_should_succeed(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(data={
             'linked_resource': ['//resource-link', '//resource-link'],
             'template_name': ['test_template', 'test_template'],
-            'column': ['test_column', ''],
+            'column': ['test_column', None],
             'field_id': ['bool_field', 'string_field'],
             'field_value': ['true', 'Test value']
         })
@@ -73,15 +98,15 @@ class TagDatasourceProcessorTest(TestCase):
         created_tags = TagDatasourceProcessor().create_tags_from_csv(None)
         self.assertEqual(2, len(created_tags))
 
-        created_tag_1 = created_tags[0]
-        self.assertEqual('test_column', created_tag_1.column)
-        self.assertTrue(created_tag_1.fields['bool_field'].bool_value)
-        self.assertFalse('string_field' in created_tag_1.fields)
+        created_tag_1 = created_tags[0]  # Tags with no column information are created first.
+        self.assertEqual('', created_tag_1.column)
+        self.assertFalse('bool_field' in created_tag_1.fields)
+        self.assertEqual('Test value', created_tag_1.fields['string_field'].string_value)
 
         created_tag_2 = created_tags[1]
-        self.assertEqual('', created_tag_2.column)
-        self.assertEqual('Test value', created_tag_2.fields['string_field'].string_value)
-        self.assertFalse('bool_field' in created_tag_2.fields)
+        self.assertEqual('test_column', created_tag_2.column)
+        self.assertTrue(created_tag_2.fields['bool_field'].bool_value)
+        self.assertFalse('string_field' in created_tag_2.fields)
 
     @patch(f'{_PATCHED_DATACATALOG_FACADE}.create_or_update_tag', lambda self, *args: args[1])
     @patch(f'{_PATCHED_DATACATALOG_FACADE}.get_tag_template', lambda self, *args: make_fake_tag_template())
@@ -92,9 +117,9 @@ class TagDatasourceProcessorTest(TestCase):
 
         mock_read_csv.return_value = pd.DataFrame(data={
             'linked_resource': ['//unreachable-resource-link', '//resource-link'],
-            'template_name': ['', 'test_template'],
-            'field_id': ['', 'string_field'],
-            'field_value': ['', 'Test value']
+            'template_name': [None, 'test_template'],
+            'field_id': [None, 'string_field'],
+            'field_value': [None, 'Test value']
         })
 
         mock_lookup_entry.side_effect = [PermissionDenied(message=''), make_fake_entry()]
@@ -116,8 +141,8 @@ class TagDatasourceProcessorTest(TestCase):
         mock_read_csv.return_value = pd.DataFrame(data={
             'linked_resource': ['//resource-link', '//resource-link'],
             'template_name': ['unreachable_test_template', 'test_template'],
-            'field_id': ['', 'string_field'],
-            'field_value': ['', 'Test value']
+            'field_id': [None, 'string_field'],
+            'field_value': [None, 'Test value']
         })
 
         mock_get_tag_template.side_effect = [PermissionDenied(message=''), make_fake_tag_template()]
