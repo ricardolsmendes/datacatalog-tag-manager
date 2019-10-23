@@ -6,7 +6,7 @@ from unittest.mock import patch
 from google.api_core.exceptions import PermissionDenied
 from google.cloud.datacatalog import enums, types
 
-from datacatalog_tag_manager.tag_datasource_processor import TagDatasourceProcessor
+from datacatalog_tag_manager import TagDatasourceProcessor
 
 
 _PATCHED_DATACATALOG_FACADE = 'datacatalog_tag_manager.tag_datasource_processor.DataCatalogFacade'
