@@ -1,6 +1,4 @@
-from setuptools import find_namespace_packages, setup
-
-packages = [package for package in find_namespace_packages(where='./src', include='datacatalog_tag_manager.*')]
+from setuptools import find_packages, setup
 
 setup(
     name='datacatalog-tag-manager',
@@ -9,15 +7,14 @@ setup(
     author_email='ricardolsmendes@gmail.com',
     description='A package to manage Google Cloud Data Catalog tags, loading metadata from external sources',
     platforms='Posix; MacOS X; Windows',
-    packages=packages,
+    packages=find_packages(where='./src'),
     package_dir={
         '': 'src'
     },
     include_package_data=True,
     install_requires=(
         'google-cloud-datacatalog',
-        'pandas',
-        'stringcase',
+        'pandas'
     ),
     setup_requires=(
         'pytest-runner',
