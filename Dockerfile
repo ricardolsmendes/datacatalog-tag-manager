@@ -11,6 +11,9 @@ COPY . .
 # Install the package and its dependencies.
 RUN pip install .
 
+# Run a linter.
+RUN python setup.py flake8
+
 # Run the unit tests.
 RUN python setup.py test
 
