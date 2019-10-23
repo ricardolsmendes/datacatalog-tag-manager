@@ -17,6 +17,7 @@ setup(
         'pandas'
     ),
     setup_requires=(
+        'flake8',
         'pytest-runner',
     ),
     tests_require=(
