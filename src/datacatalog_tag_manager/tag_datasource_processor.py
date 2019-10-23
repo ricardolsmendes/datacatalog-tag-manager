@@ -3,7 +3,9 @@ import pandas as pd
 
 from google.api_core.exceptions import PermissionDenied
 
-from .constant import *
+from .constant import TAGS_DS_FIELD_ID_COLUMN_LABEL, TAGS_DS_FIELD_VALUE_COLUMN_LABEL,\
+    TAGS_DS_LINKED_RESOURCE_COLUMN_LABEL, TAGS_DS_SCHEMA_COLUMN_COLUMN_LABEL, TAGS_DS_TEMPLATE_NAME_COLUMN_LABEL,\
+    TAGS_DS_COLUMNS_ORDER, TAGS_DS_FILLABLE_COLUMNS, TAGS_DS_NON_FILLABLE_COLUMNS
 from .datacatalog_entity_factory import DataCatalogEntityFactory
 from .datacatalog_facade import DataCatalogFacade
 
