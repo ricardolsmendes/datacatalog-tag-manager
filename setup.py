@@ -9,12 +9,12 @@ setup(
     platforms='Posix; MacOS X; Windows',
     packages=find_packages(where='./src'),
     package_dir={
-        '': 'src'
+        '': 'src',
     },
     include_package_data=True,
     install_requires=(
         'google-cloud-datacatalog',
-        'pandas'
+        'pandas',
     ),
     setup_requires=(
         'flake8',
@@ -24,7 +24,7 @@ setup(
         'pytest-cov',
     ),
     classifiers=[
-        'Development Status :: 1 - Alpha',
+        'Development Status :: 3 - Alpha',
         'Natural Language :: English',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.6',
