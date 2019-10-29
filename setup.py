@@ -9,7 +9,7 @@ setup(
     platforms='Posix; MacOS X; Windows',
     packages=find_packages(where='./src'),
     package_dir={
-        '': 'src',
+        '': 'src'
     },
     include_package_data=True,
     install_requires=(
