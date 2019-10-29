@@ -14,21 +14,26 @@ jobs:
       - checkout
 
       - run:
-          name: Install dependencies
+          name: Set up a virtual environment
           command: |
             python3 -m venv venv
             . venv/bin/activate
             pip install --upgrade setuptools
+
+      - run:
+          name: Install the package
+          command: |
+            . venv/bin/activate
             pip install .
 
       - run:
-          name: Run linter
+          name: Run Flake8 on modules registered in setup.py
           command: |
             . venv/bin/activate
             python setup.py flake8
 
       - run:
-          name: Run tests
+          name: Run the unit tests
           command: |
             . venv/bin/activate
             python setup.py test
