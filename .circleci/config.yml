@@ -17,20 +17,20 @@ jobs:
           name: Set up a virtual environment
           command: |
             python3 -m venv venv
+
+      - run:
+          name: Run Flake8 on source and test files
+          command: |
             . venv/bin/activate
-            pip install --upgrade setuptools
+            pip install --upgrade flake8
+            flake8 ./src ./tests
 
       - run:
           name: Install the package
           command: |
             . venv/bin/activate
+            pip install --upgrade setuptools
             pip install .
-
-      - run:
-          name: Run Flake8 on modules registered in setup.py
-          command: |
-            . venv/bin/activate
-            python setup.py flake8
 
       - run:
           name: Run the unit tests
