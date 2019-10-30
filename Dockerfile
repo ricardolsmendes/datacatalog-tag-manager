@@ -8,11 +8,12 @@ ENV GOOGLE_APPLICATION_CREDENTIALS=./credentials/datacatalog-tag-manager.json
 # Copy project files (see .dockerignore).
 COPY . .
 
+# Run a linter.
+RUN pip install --upgrade flake8
+RUN flake8 src tests
+
 # Install the package and its dependencies.
 RUN pip install .
-
-# Run a linter.
-RUN python setup.py flake8
 
 # Run the unit tests.
 RUN python setup.py test
