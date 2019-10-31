@@ -1,13 +1,13 @@
-from setuptools import find_packages, setup
+import setuptools
 
-setup(
+setuptools.setup(
     name='datacatalog-tag-manager',
     version='0.0.1',
     author='Ricardo Mendes',
     author_email='ricardolsmendes@gmail.com',
     description='A package to manage Google Cloud Data Catalog tags, loading metadata from external sources',
     platforms='Posix; MacOS X; Windows',
-    packages=find_packages(where='./src'),
+    packages=setuptools.find_packages(where='./src'),
     package_dir={
         '': 'src'
     },

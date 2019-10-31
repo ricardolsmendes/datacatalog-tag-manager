@@ -1,4 +1,4 @@
-from google.cloud.datacatalog import DataCatalogClient
+from google.cloud import datacatalog
 
 
 class DataCatalogFacade:
@@ -6,7 +6,7 @@ class DataCatalogFacade:
 
     def __init__(self):
         # Initialize the API client.
-        self.__datacatalog = DataCatalogClient()
+        self.__datacatalog = datacatalog.DataCatalogClient()
 
     def create_or_update_tag(self, parent_entry_name, tag):
         entry_tags = self.__datacatalog.list_tags(parent=parent_entry_name)

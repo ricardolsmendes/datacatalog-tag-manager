@@ -1,7 +1,7 @@
 import argparse
 import logging
 
-from .tag_datasource_processor import TagDatasourceProcessor
+from datacatalog_tag_manager import tag_datasource_processor
 
 
 class TagManagerCLI:
@@ -34,4 +34,4 @@ class TagManagerCLI:
 
     @classmethod
     def __create_tags(cls, args):
-        TagDatasourceProcessor().create_tags_from_csv(file_path=args.csv_file)
+        tag_datasource_processor.TagDatasourceProcessor().create_tags_from_csv(file_path=args.csv_file)

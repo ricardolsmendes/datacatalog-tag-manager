@@ -1,7 +1,7 @@
 import sys
 
-from datacatalog_tag_manager import TagManagerCLI
+import datacatalog_tag_manager
 
 if __name__ == '__main__':
     argv = sys.argv
-    TagManagerCLI.run(argv[1:] if len(argv) > 0 else argv)
+    datacatalog_tag_manager.TagManagerCLI.run(argv[1:] if len(argv) > 0 else argv)

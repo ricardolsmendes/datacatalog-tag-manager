@@ -1,12 +1,12 @@
 from datetime import datetime
-from unittest import TestCase
+import unittest
 
 from google.cloud.datacatalog import enums, types
 
-from datacatalog_tag_manager.datacatalog_entity_factory import DataCatalogEntityFactory
+from datacatalog_tag_manager import datacatalog_entity_factory
 
 
-class DataCatalogEntityFactoryTest(TestCase):
+class DataCatalogEntityFactoryTest(unittest.TestCase):
     __BOOL_TYPE = enums.FieldType.PrimitiveType.BOOL
     __DOUBLE_TYPE = enums.FieldType.PrimitiveType.DOUBLE
     __STRING_TYPE = enums.FieldType.PrimitiveType.STRING
@@ -16,7 +16,7 @@ class DataCatalogEntityFactoryTest(TestCase):
         tag_template = types.TagTemplate()
         tag_template.name = 'test_template'
 
-        tag = DataCatalogEntityFactory.make_tag(tag_template, None, 'test_column')
+        tag = datacatalog_entity_factory.DataCatalogEntityFactory.make_tag(tag_template, None, 'test_column')
 
         self.assertEqual('test_column', tag.column)
 
@@ -33,7 +33,7 @@ class DataCatalogEntityFactoryTest(TestCase):
             'test_bool_field_str': 'T'
         }
 
-        tag = DataCatalogEntityFactory.make_tag(tag_template, tag_fields, None)
+        tag = datacatalog_entity_factory.DataCatalogEntityFactory.make_tag(tag_template, tag_fields, None)
 
         self.assertTrue(tag.fields['test_bool_field'].bool_value)
         self.assertTrue(tag.fields['test_bool_field_int'].bool_value)
@@ -50,7 +50,7 @@ class DataCatalogEntityFactoryTest(TestCase):
             'test_double_field_str': '3.1415'
         }
 
-        tag = DataCatalogEntityFactory.make_tag(tag_template, tag_fields, None)
+        tag = datacatalog_entity_factory.DataCatalogEntityFactory.make_tag(tag_template, tag_fields, None)
 
         self.assertEqual(2.5, tag.fields['test_double_field'].double_value)
         self.assertEqual(3.1415, tag.fields['test_double_field_str'].double_value)
@@ -64,7 +64,7 @@ class DataCatalogEntityFactoryTest(TestCase):
             'test_string_field': 'Test String Value'
         }
 
-        tag = DataCatalogEntityFactory.make_tag(tag_template, tag_fields, None)
+        tag = datacatalog_entity_factory.DataCatalogEntityFactory.make_tag(tag_template, tag_fields, None)
 
         self.assertEqual('Test String Value', tag.fields['test_string_field'].string_value)
 
@@ -81,7 +81,7 @@ class DataCatalogEntityFactoryTest(TestCase):
             'test_timestamp_field_str': '2019-10-15T21:30:00-0300'
         }
 
-        tag = DataCatalogEntityFactory.make_tag(tag_template, tag_fields, None)
+        tag = datacatalog_entity_factory.DataCatalogEntityFactory.make_tag(tag_template, tag_fields, None)
 
         self.assertEqual(test_datetime.timestamp(),
                          tag.fields['test_timestamp_field'].timestamp_value.seconds)
@@ -97,7 +97,7 @@ class DataCatalogEntityFactoryTest(TestCase):
             'test_enum_field': 'VALUE_1'
         }
 
-        tag = DataCatalogEntityFactory.make_tag(tag_template, tag_fields, None)
+        tag = datacatalog_entity_factory.DataCatalogEntityFactory.make_tag(tag_template, tag_fields, None)
 
         self.assertEqual('VALUE_1', tag.fields['test_enum_field'].enum_value.display_name)
 
@@ -110,7 +110,7 @@ class DataCatalogEntityFactoryTest(TestCase):
             'test_bool_field_invalid': True
         }
 
-        tag = DataCatalogEntityFactory.make_tag(tag_template, tag_fields, None)
+        tag = datacatalog_entity_factory.DataCatalogEntityFactory.make_tag(tag_template, tag_fields, None)
 
         self.assertFalse('test_bool_field' in tag.fields)
         self.assertFalse('test_bool_field_invalid' in tag.fields)

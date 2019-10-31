@@ -1,6 +1,5 @@
-import logging
-
 from datetime import datetime
+import logging
 
 from google.cloud.datacatalog import enums, types
 
