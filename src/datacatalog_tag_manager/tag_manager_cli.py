@@ -1,7 +1,7 @@
 import argparse
 import logging
 
-from datacatalog_tag_manager import tag_datasource_processor
+from . import tag_datasource_processor
 
 
 class TagManagerCLI:

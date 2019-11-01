@@ -3,7 +3,7 @@ import logging
 from google.api_core import exceptions
 import pandas as pd
 
-from datacatalog_tag_manager import constant, datacatalog_entity_factory, datacatalog_facade
+from . import constant, datacatalog_entity_factory, datacatalog_facade
 
 
 class TagDatasourceProcessor:
