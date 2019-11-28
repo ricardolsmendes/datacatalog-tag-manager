@@ -11,7 +11,8 @@ import datacatalog_tag_manager
 @mock.patch('datacatalog_tag_manager.tag_datasource_processor.pd.read_csv')
 class TagDatasourceProcessorTest(unittest.TestCase):
 
-    @mock.patch('datacatalog_tag_manager.tag_datasource_processor.datacatalog_facade.DataCatalogFacade')
+    @mock.patch(
+        'datacatalog_tag_manager.tag_datasource_processor.datacatalog_facade.DataCatalogFacade')
     def setUp(self, mock_datacatalog_facade):
         self.__tag_datasource_processor = datacatalog_tag_manager.TagDatasourceProcessor()
         # Shortcut for the object assigned to self.__tag_datasource_processor.__datacatalog_facade
@@ -19,7 +20,8 @@ class TagDatasourceProcessorTest(unittest.TestCase):
 
     def test_constructor_should_set_instance_attributes(self, mock_read_csv):
         self.assertIsNotNone(
-            self.__tag_datasource_processor.__dict__['_TagDatasourceProcessor__datacatalog_facade'])
+            self.__tag_datasource_processor.__dict__[
+                '_TagDatasourceProcessor__datacatalog_facade'])
 
     def test_create_tags_from_csv_should_succeed(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(data={
@@ -114,7 +116,9 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertTrue(created_tag_2.fields['bool_field'].bool_value)
         self.assertFalse('string_field' in created_tag_2.fields)
 
-    def test_create_tags_from_csv_permission_denied_lookup_entry_should_skip_resource(self, mock_read_csv):
+    def test_create_tags_from_csv_permission_denied_lookup_entry_should_skip_resource(
+            self, mock_read_csv):
+
         mock_read_csv.return_value = pd.DataFrame(data={
             'linked_resource': ['//unreachable-resource-link', '//resource-link'],
             'template_name': [None, 'test_template'],
@@ -123,7 +127,8 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         })
 
         datacatalog_facade = self.__datacatalog_facade
-        datacatalog_facade.lookup_entry.side_effect = (exceptions.PermissionDenied(message=''), make_fake_entry())
+        datacatalog_facade.lookup_entry.side_effect = \
+            (exceptions.PermissionDenied(message=''), make_fake_entry())
         datacatalog_facade.get_tag_template.return_value = make_fake_tag_template()
         datacatalog_facade.create_or_update_tag.side_effect = lambda *args: args[1]
 
@@ -134,7 +139,9 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertEqual('test_template', created_tag.template)
         self.assertEqual('Test value', created_tag.fields['string_field'].string_value)
 
-    def test_create_tags_from_csv_permission_denied_get_template_should_skip_template(self, mock_read_csv):
+    def test_create_tags_from_csv_permission_denied_get_template_should_skip_template(
+            self, mock_read_csv):
+
         mock_read_csv.return_value = pd.DataFrame(data={
             'linked_resource': ['//resource-link', '//resource-link'],
             'template_name': ['unreachable_test_template', 'test_template'],

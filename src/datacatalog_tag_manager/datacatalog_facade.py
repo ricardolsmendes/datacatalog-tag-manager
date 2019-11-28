@@ -12,8 +12,9 @@ class DataCatalogFacade:
         entry_tags = self.__datacatalog.list_tags(parent=parent_entry_name)
 
         try:
-            persisted_tag = next(entry_tag for entry_tag in entry_tags
-                                 if entry_tag.template == tag.template and entry_tag.column == tag.column)
+            persisted_tag = next(
+                entry_tag for entry_tag in entry_tags
+                if entry_tag.template == tag.template and entry_tag.column == tag.column)
             tag.name = persisted_tag.name
             return self.__datacatalog.update_tag(tag=tag)
         except StopIteration:

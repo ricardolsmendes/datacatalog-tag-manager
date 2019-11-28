@@ -38,8 +38,9 @@ class DataCatalogEntityFactory:
             if field_id in tag_template.fields:
                 valid_fields_dict[field_id] = field_value
             else:
-                logging.warning('Field %s (%s) was not found in the Tag Template %s and will be ignored.',
-                                field_id, str(field_value), tag_template.name)
+                logging.warning(
+                    'Field %s (%s) was not found in the Tag Template %s and will be ignored.',
+                    field_id, str(field_value), tag_template.name)
 
         return valid_fields_dict
 
