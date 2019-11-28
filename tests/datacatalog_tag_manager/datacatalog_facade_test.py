@@ -22,7 +22,7 @@ class DataCatalogFacadeTest(unittest.TestCase):
         datacatalog = self.__datacatalog_client
         datacatalog.list_tags.return_value = []
 
-        self.__datacatalog_facade.create_or_update_tag(None, None)
+        self.__datacatalog_facade.create_or_update_tag('entry_name', {})
 
         datacatalog.list_tags.assert_called_once()
         datacatalog.create_tag.assert_called_once()
@@ -36,7 +36,7 @@ class DataCatalogFacadeTest(unittest.TestCase):
         datacatalog = self.__datacatalog_client
         datacatalog.list_tags.return_value = [tag_1]
 
-        self.__datacatalog_facade.create_or_update_tag(None, tag_2)
+        self.__datacatalog_facade.create_or_update_tag('entry_name', tag_2)
 
         datacatalog.list_tags.assert_called_once()
         datacatalog.update_tag.assert_called_once()
@@ -49,7 +49,7 @@ class DataCatalogFacadeTest(unittest.TestCase):
         datacatalog.get_tag_template.assert_called_once()
 
     def test_lookup_entry_should_call_client_library_method(self):
-        self.__datacatalog_facade.lookup_entry(None)
+        self.__datacatalog_facade.lookup_entry('linked-resource')
 
         datacatalog = self.__datacatalog_client
         datacatalog.lookup_entry.assert_called_once()
