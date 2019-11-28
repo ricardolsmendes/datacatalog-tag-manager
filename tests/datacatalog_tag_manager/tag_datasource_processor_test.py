@@ -8,22 +8,19 @@ import pandas as pd
 import datacatalog_tag_manager
 
 
-_PATCHED_DATACATALOG_FACADE = 'datacatalog_tag_manager.tag_datasource_processor' \
-                              '.datacatalog_facade.DataCatalogFacade'
-
-
-@mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.__init__', lambda self: None)
+@mock.patch('datacatalog_tag_manager.tag_datasource_processor.pd.read_csv')
 class TagDatasourceProcessorTest(unittest.TestCase):
-    __PATCHED_PANDAS = 'datacatalog_tag_manager.tag_datasource_processor.pd'
 
-    def test_constructor_should_set_instance_attributes(self):
+    @mock.patch('datacatalog_tag_manager.tag_datasource_processor.datacatalog_facade.DataCatalogFacade')
+    def setUp(self, mock_datacatalog_facade):
+        self.__tag_datasource_processor = datacatalog_tag_manager.TagDatasourceProcessor()
+        # Shortcut for the object assigned to self.__tag_datasource_processor.__datacatalog_facade
+        self.__datacatalog_facade = mock_datacatalog_facade.return_value
+
+    def test_constructor_should_set_instance_attributes(self, mock_read_csv):
         self.assertIsNotNone(
-            datacatalog_tag_manager.TagDatasourceProcessor().__dict__['_TagDatasourceProcessor__datacatalog_facade'])
+            self.__tag_datasource_processor.__dict__['_TagDatasourceProcessor__datacatalog_facade'])
 
-    @mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.create_or_update_tag', lambda self, *args: args[1])
-    @mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.get_tag_template', lambda self, *args: make_fake_tag_template())
-    @mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.lookup_entry', lambda self, *args: make_fake_entry())
-    @mock.patch(f'{__PATCHED_PANDAS}.read_csv')
     def test_create_tags_from_csv_should_succeed(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(data={
             'linked_resource': ['//resource-link'],
@@ -32,17 +29,18 @@ class TagDatasourceProcessorTest(unittest.TestCase):
             'field_value': ['Test value']
         })
 
-        created_tags = datacatalog_tag_manager.TagDatasourceProcessor().create_tags_from_csv(None)
+        datacatalog_facade = self.__datacatalog_facade
+        datacatalog_facade.lookup_entry.return_value = make_fake_entry()
+        datacatalog_facade.get_tag_template.return_value = make_fake_tag_template()
+        datacatalog_facade.create_or_update_tag.side_effect = lambda *args: args[1]
+
+        created_tags = self.__tag_datasource_processor.create_tags_from_csv('file-path')
         self.assertEqual(1, len(created_tags))
 
         created_tag = created_tags[0]
         self.assertEqual('test_template', created_tag.template)
         self.assertEqual('Test value', created_tag.fields['string_field'].string_value)
 
-    @mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.create_or_update_tag', lambda self, *args: args[1])
-    @mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.get_tag_template', lambda self, *args: make_fake_tag_template())
-    @mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.lookup_entry', lambda self, *args: make_fake_entry())
-    @mock.patch(f'{__PATCHED_PANDAS}.read_csv')
     def test_create_tags_from_csv_missing_values_should_succeed(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(data={
             'linked_resource': ['//resource-link-1', None, '//resource-link-2', None],
@@ -51,7 +49,12 @@ class TagDatasourceProcessorTest(unittest.TestCase):
             'field_value': ['true', 'Test value 1', 'false', 'Test value 2']
         })
 
-        created_tags = datacatalog_tag_manager.TagDatasourceProcessor().create_tags_from_csv(None)
+        datacatalog_facade = self.__datacatalog_facade
+        datacatalog_facade.lookup_entry.return_value = make_fake_entry()
+        datacatalog_facade.get_tag_template.return_value = make_fake_tag_template()
+        datacatalog_facade.create_or_update_tag.side_effect = lambda *args: args[1]
+
+        created_tags = self.__tag_datasource_processor.create_tags_from_csv('file-path')
         self.assertEqual(2, len(created_tags))
 
         created_tag_1 = created_tags[0]
@@ -64,10 +67,6 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertFalse(created_tag_2.fields['bool_field'].bool_value)
         self.assertEqual('Test value 2', created_tag_2.fields['string_field'].string_value)
 
-    @mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.create_or_update_tag', lambda self, *args: args[1])
-    @mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.get_tag_template', lambda self, *args: make_fake_tag_template())
-    @mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.lookup_entry', lambda self, *args: make_fake_entry())
-    @mock.patch(f'{__PATCHED_PANDAS}.read_csv')
     def test_create_tags_from_csv_unordered_columns_should_succeed(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(data={
             'field_id': ['string_field'],
@@ -76,17 +75,18 @@ class TagDatasourceProcessorTest(unittest.TestCase):
             'linked_resource': ['//resource-link']
         })
 
-        created_tags = datacatalog_tag_manager.TagDatasourceProcessor().create_tags_from_csv(None)
+        datacatalog_facade = self.__datacatalog_facade
+        datacatalog_facade.lookup_entry.return_value = make_fake_entry()
+        datacatalog_facade.get_tag_template.return_value = make_fake_tag_template()
+        datacatalog_facade.create_or_update_tag.side_effect = lambda *args: args[1]
+
+        created_tags = self.__tag_datasource_processor.create_tags_from_csv('file-path')
         self.assertEqual(1, len(created_tags))
 
         created_tag = created_tags[0]
         self.assertEqual('test_template', created_tag.template)
         self.assertEqual('Test value', created_tag.fields['string_field'].string_value)
 
-    @mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.create_or_update_tag', lambda self, *args: args[1])
-    @mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.get_tag_template', lambda self, *args: make_fake_tag_template())
-    @mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.lookup_entry', lambda self, *args: make_fake_entry())
-    @mock.patch(f'{__PATCHED_PANDAS}.read_csv')
     def test_create_tags_from_csv_column_metadata_should_succeed(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(data={
             'linked_resource': ['//resource-link', '//resource-link'],
@@ -96,7 +96,12 @@ class TagDatasourceProcessorTest(unittest.TestCase):
             'field_value': ['true', 'Test value']
         })
 
-        created_tags = datacatalog_tag_manager.TagDatasourceProcessor().create_tags_from_csv(None)
+        datacatalog_facade = self.__datacatalog_facade
+        datacatalog_facade.lookup_entry.return_value = make_fake_entry()
+        datacatalog_facade.get_tag_template.return_value = make_fake_tag_template()
+        datacatalog_facade.create_or_update_tag.side_effect = lambda *args: args[1]
+
+        created_tags = self.__tag_datasource_processor.create_tags_from_csv('file-path')
         self.assertEqual(2, len(created_tags))
 
         created_tag_1 = created_tags[0]  # Tags with no column information are created first.
@@ -109,13 +114,7 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertTrue(created_tag_2.fields['bool_field'].bool_value)
         self.assertFalse('string_field' in created_tag_2.fields)
 
-    @mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.create_or_update_tag', lambda self, *args: args[1])
-    @mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.get_tag_template', lambda self, *args: make_fake_tag_template())
-    @mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.lookup_entry')
-    @mock.patch(f'{__PATCHED_PANDAS}.read_csv')
-    def test_create_tags_from_csv_permission_denied_lookup_entry_should_skip_resource(
-            self, mock_read_csv, mock_lookup_entry):
-
+    def test_create_tags_from_csv_permission_denied_lookup_entry_should_skip_resource(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(data={
             'linked_resource': ['//unreachable-resource-link', '//resource-link'],
             'template_name': [None, 'test_template'],
@@ -123,24 +122,19 @@ class TagDatasourceProcessorTest(unittest.TestCase):
             'field_value': [None, 'Test value']
         })
 
-        mock_lookup_entry.side_effect = [
-            exceptions.PermissionDenied(message=''), make_fake_entry()
-        ]
+        datacatalog_facade = self.__datacatalog_facade
+        datacatalog_facade.lookup_entry.side_effect = (exceptions.PermissionDenied(message=''), make_fake_entry())
+        datacatalog_facade.get_tag_template.return_value = make_fake_tag_template()
+        datacatalog_facade.create_or_update_tag.side_effect = lambda *args: args[1]
 
-        created_tags = datacatalog_tag_manager.TagDatasourceProcessor().create_tags_from_csv(None)
+        created_tags = self.__tag_datasource_processor.create_tags_from_csv('file-path')
         self.assertEqual(1, len(created_tags))
 
         created_tag = created_tags[0]
         self.assertEqual('test_template', created_tag.template)
         self.assertEqual('Test value', created_tag.fields['string_field'].string_value)
 
-    @mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.create_or_update_tag', lambda self, *args: args[1])
-    @mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.get_tag_template')
-    @mock.patch(f'{_PATCHED_DATACATALOG_FACADE}.lookup_entry', lambda self, *args: make_fake_entry())
-    @mock.patch(f'{__PATCHED_PANDAS}.read_csv')
-    def test_create_tags_from_csv_permission_denied_get_template_should_skip_template(
-            self, mock_read_csv, mock_get_tag_template):
-
+    def test_create_tags_from_csv_permission_denied_get_template_should_skip_template(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(data={
             'linked_resource': ['//resource-link', '//resource-link'],
             'template_name': ['unreachable_test_template', 'test_template'],
@@ -148,11 +142,13 @@ class TagDatasourceProcessorTest(unittest.TestCase):
             'field_value': [None, 'Test value']
         })
 
-        mock_get_tag_template.side_effect = [
-            exceptions.PermissionDenied(message=''), make_fake_tag_template()
-        ]
+        datacatalog_facade = self.__datacatalog_facade
+        datacatalog_facade.lookup_entry.return_value = make_fake_entry()
+        datacatalog_facade.get_tag_template.side_effect = \
+            (exceptions.PermissionDenied(message=''), make_fake_tag_template())
+        datacatalog_facade.create_or_update_tag.side_effect = lambda *args: args[1]
 
-        created_tags = datacatalog_tag_manager.TagDatasourceProcessor().create_tags_from_csv(None)
+        created_tags = self.__tag_datasource_processor.create_tags_from_csv('file-path')
         self.assertEqual(1, len(created_tags))
 
         created_tag = created_tags[0]

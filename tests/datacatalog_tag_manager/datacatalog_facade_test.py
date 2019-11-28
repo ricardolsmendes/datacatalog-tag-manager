@@ -5,51 +5,54 @@ from google.cloud.datacatalog import types
 
 from datacatalog_tag_manager import datacatalog_facade
 
-_PATCHED_DATACATALOG_CLIENT = 'datacatalog_tag_manager.datacatalog_facade.datacatalog.DataCatalogClient'
 
-
-@mock.patch(f'{_PATCHED_DATACATALOG_CLIENT}.__init__', lambda self: None)
 class DataCatalogFacadeTest(unittest.TestCase):
+
+    @mock.patch('datacatalog_tag_manager.datacatalog_facade.datacatalog.DataCatalogClient')
+    def setUp(self, mock_datacatalog_client):
+        self.__datacatalog_facade = datacatalog_facade.DataCatalogFacade()
+        # Shortcut for the object assigned to self.__datacatalog_facade.__datacatalog
+        self.__datacatalog_client = mock_datacatalog_client.return_value
 
     def test_constructor_should_set_instance_attributes(self):
         self.assertIsNotNone(
-            datacatalog_facade.DataCatalogFacade().__dict__['_DataCatalogFacade__datacatalog'])
+            self.__datacatalog_facade.__dict__['_DataCatalogFacade__datacatalog'])
 
-    @mock.patch(f'{_PATCHED_DATACATALOG_CLIENT}.create_tag')
-    @mock.patch(f'{_PATCHED_DATACATALOG_CLIENT}.list_tags')
-    def test_create_or_update_tag_nonexistent_should_create(self, mock_list_tags, mock_create_tag):
-        mock_list_tags.return_value = []
+    def test_create_or_update_tag_nonexistent_should_create(self):
+        datacatalog = self.__datacatalog_client
+        datacatalog.list_tags.return_value = []
 
-        datacatalog_facade.DataCatalogFacade().create_or_update_tag(None, None)
+        self.__datacatalog_facade.create_or_update_tag(None, None)
 
-        mock_list_tags.assert_called_once()
-        mock_create_tag.assert_called_once()
+        datacatalog.list_tags.assert_called_once()
+        datacatalog.create_tag.assert_called_once()
 
-    @mock.patch(f'{_PATCHED_DATACATALOG_CLIENT}.update_tag')
-    @mock.patch(f'{_PATCHED_DATACATALOG_CLIENT}.list_tags')
-    def test_create_or_update_tag_pre_existing_should_update(self, mock_list_tags, mock_update_tag):
+    def test_create_or_update_tag_pre_existing_should_update(self):
         tag_1 = make_fake_tag()
 
         tag_2 = make_fake_tag()
         tag_2.fields['test_string_field'].string_value = '[UPDATED] Test String Value'
 
-        mock_list_tags.return_value = [tag_1]
+        datacatalog = self.__datacatalog_client
+        datacatalog.list_tags.return_value = [tag_1]
 
-        datacatalog_facade.DataCatalogFacade().create_or_update_tag(None, tag_2)
+        self.__datacatalog_facade.create_or_update_tag(None, tag_2)
 
-        mock_list_tags.assert_called_once()
-        mock_update_tag.assert_called_once()
-        mock_update_tag.assert_called_with(tag=tag_2)
+        datacatalog.list_tags.assert_called_once()
+        datacatalog.update_tag.assert_called_once()
+        datacatalog.update_tag.assert_called_with(tag=tag_2)
 
-    @mock.patch(f'{_PATCHED_DATACATALOG_CLIENT}.get_tag_template')
-    def test_get_tag_template_should_call_client_library_method(self, mock_get_tag_template):
-        datacatalog_facade.DataCatalogFacade().get_tag_template(None)
-        mock_get_tag_template.assert_called_once()
+    def test_get_tag_template_should_call_client_library_method(self):
+        self.__datacatalog_facade.get_tag_template(None)
 
-    @mock.patch(f'{_PATCHED_DATACATALOG_CLIENT}.lookup_entry')
-    def test_lookup_entry_should_call_client_library_method(self, mock_lookup_entry):
-        datacatalog_facade.DataCatalogFacade().lookup_entry(None)
-        mock_lookup_entry.assert_called_once()
+        datacatalog = self.__datacatalog_client
+        datacatalog.get_tag_template.assert_called_once()
+
+    def test_lookup_entry_should_call_client_library_method(self):
+        self.__datacatalog_facade.lookup_entry(None)
+
+        datacatalog = self.__datacatalog_client
+        datacatalog.lookup_entry.assert_called_once()
 
 
 def make_fake_tag():
