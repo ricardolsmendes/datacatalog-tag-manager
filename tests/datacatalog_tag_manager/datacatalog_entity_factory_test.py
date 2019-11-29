@@ -47,10 +47,7 @@ class DataCatalogEntityFactoryTest(unittest.TestCase):
         tag_template.fields['test_double_field'].type.primitive_type = self.__DOUBLE_TYPE
         tag_template.fields['test_double_field_str'].type.primitive_type = self.__DOUBLE_TYPE
 
-        tag_fields = {
-            'test_double_field': 2.5,
-            'test_double_field_str': '3.1415'
-        }
+        tag_fields = {'test_double_field': 2.5, 'test_double_field_str': '3.1415'}
 
         tag = datacatalog_entity_factory.DataCatalogEntityFactory.make_tag(
             tag_template, tag_fields)
@@ -63,9 +60,7 @@ class DataCatalogEntityFactoryTest(unittest.TestCase):
         tag_template.name = 'test_template'
         tag_template.fields['test_string_field'].type.primitive_type = self.__STRING_TYPE
 
-        tag_fields = {
-            'test_string_field': 'Test String Value'
-        }
+        tag_fields = {'test_string_field': 'Test String Value'}
 
         tag = datacatalog_entity_factory.DataCatalogEntityFactory.make_tag(
             tag_template, tag_fields)
@@ -99,9 +94,7 @@ class DataCatalogEntityFactoryTest(unittest.TestCase):
         tag_template.fields['test_enum_field'].type.enum_type.allowed_values.add().display_name = \
             'VALUE_1'
 
-        tag_fields = {
-            'test_enum_field': 'VALUE_1'
-        }
+        tag_fields = {'test_enum_field': 'VALUE_1'}
 
         tag = datacatalog_entity_factory.DataCatalogEntityFactory.make_tag(
             tag_template, tag_fields)
@@ -113,9 +106,7 @@ class DataCatalogEntityFactoryTest(unittest.TestCase):
         tag_template.name = 'test_template'
         tag_template.fields['test_bool_field'].type.primitive_type = self.__BOOL_TYPE
 
-        tag_fields = {
-            'test_bool_field_invalid': True
-        }
+        tag_fields = {'test_bool_field_invalid': True}
 
         tag = datacatalog_entity_factory.DataCatalogEntityFactory.make_tag(
             tag_template, tag_fields)

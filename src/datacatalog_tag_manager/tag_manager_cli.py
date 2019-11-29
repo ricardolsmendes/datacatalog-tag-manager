@@ -5,7 +5,6 @@ from . import tag_datasource_processor
 
 
 class TagManagerCLI:
-
     @classmethod
     def run(cls, argv):
         cls.__setup_logging()
@@ -19,16 +18,15 @@ class TagManagerCLI:
 
     @classmethod
     def _parse_args(cls, argv):
-        parser = argparse.ArgumentParser(
-            description=__doc__,
-            formatter_class=argparse.RawDescriptionHelpFormatter
-        )
+        parser = argparse.ArgumentParser(description=__doc__,
+                                         formatter_class=argparse.RawDescriptionHelpFormatter)
 
         subparsers = parser.add_subparsers()
 
         create_tags_parser = subparsers.add_parser('create-tags', help='Create Tags')
-        create_tags_parser.add_argument(
-            '--csv-file', help='CSV file with Tags information', required=True)
+        create_tags_parser.add_argument('--csv-file',
+                                        help='CSV file with Tags information',
+                                        required=True)
         create_tags_parser.set_defaults(func=cls.__create_tags)
 
         return parser.parse_args(argv)

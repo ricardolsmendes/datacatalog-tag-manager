@@ -5,14 +5,13 @@ import datacatalog_tag_manager
 
 
 class TagManagerCLITest(unittest.TestCase):
-
     def test_parse_args_invalid_subcommand_should_raise_system_exit(self):
-        self.assertRaises(
-            SystemExit, datacatalog_tag_manager.TagManagerCLI._parse_args, ['invalid-subcommand'])
+        self.assertRaises(SystemExit, datacatalog_tag_manager.TagManagerCLI._parse_args,
+                          ['invalid-subcommand'])
 
     def test_parse_args_create_tags_missing_mandatory_args_should_raise_system_exit(self):
-        self.assertRaises(
-            SystemExit, datacatalog_tag_manager.TagManagerCLI._parse_args, ['create-tags'])
+        self.assertRaises(SystemExit, datacatalog_tag_manager.TagManagerCLI._parse_args,
+                          ['create-tags'])
 
     def test_parse_args_create_tags_should_parse_mandatory_args(self):
         args = datacatalog_tag_manager.TagManagerCLI._parse_args(

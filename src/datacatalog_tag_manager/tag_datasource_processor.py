@@ -7,7 +7,6 @@ from . import constant, datacatalog_entity_factory, datacatalog_facade
 
 
 class TagDatasourceProcessor:
-
     def __init__(self):
         self.__datacatalog_facade = datacatalog_facade.DataCatalogFacade()
 
@@ -29,8 +28,9 @@ class TagDatasourceProcessor:
             try:
                 catalog_entry = self.__datacatalog_facade.lookup_entry(linked_resource)
             except exceptions.PermissionDenied:
-                logging.warning('Permission denied when looking up Entry for %s.'
-                                ' The resource will be skipped.', linked_resource)
+                logging.warning(
+                    'Permission denied when looking up Entry for %s.'
+                    ' The resource will be skipped.', linked_resource)
                 continue
 
             templates_subset = \
@@ -42,9 +42,10 @@ class TagDatasourceProcessor:
 
             tags = self.__create_tags_from_templates_dataframe(templates_subset)
 
-            created_tags.extend(
-                [self.__datacatalog_facade.create_or_update_tag(catalog_entry.name, tag)
-                 for tag in tags])
+            created_tags.extend([
+                self.__datacatalog_facade.create_or_update_tag(catalog_entry.name, tag)
+                for tag in tags
+            ])
 
         return created_tags
 
@@ -57,8 +58,8 @@ class TagDatasourceProcessor:
         filled_subset = ordered_df[constant.TAGS_DS_FILLABLE_COLUMNS].fillna(method='pad')
 
         # Rebuild the dataframe by concatenating the fillable and non-fillable columns.
-        rebuilt_df = pd.concat(
-            [filled_subset, ordered_df[constant.TAGS_DS_NON_FILLABLE_COLUMNS]], axis=1)
+        rebuilt_df = pd.concat([filled_subset, ordered_df[constant.TAGS_DS_NON_FILLABLE_COLUMNS]],
+                               axis=1)
 
         return rebuilt_df
 
@@ -68,8 +69,9 @@ class TagDatasourceProcessor:
             try:
                 tag_template = self.__datacatalog_facade.get_tag_template(template_name)
             except exceptions.PermissionDenied:
-                logging.warning('Permission denied when getting Tag Template %s.'
-                                ' Unable to create Tags using it.', template_name)
+                logging.warning(
+                    'Permission denied when getting Tag Template %s.'
+                    ' Unable to create Tags using it.', template_name)
                 continue
 
             columns_subset = \
@@ -85,8 +87,8 @@ class TagDatasourceProcessor:
                 columns_subset.loc[null_columns_index, constant.TAGS_DS_FIELD_ID_COLUMN_LABEL:]
 
             if not null_columns_subset.empty:
-                columns_subset.dropna(
-                    subset=[constant.TAGS_DS_SCHEMA_COLUMN_COLUMN_LABEL], inplace=True)
+                columns_subset.dropna(subset=[constant.TAGS_DS_SCHEMA_COLUMN_COLUMN_LABEL],
+                                      inplace=True)
                 tags.append(
                     self.__create_tag_from_fields_dataframe(tag_template, null_columns_subset))
 

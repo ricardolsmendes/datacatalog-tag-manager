@@ -3,7 +3,6 @@ from google.cloud import datacatalog
 
 class DataCatalogFacade:
     """Data Catalog API communication facade."""
-
     def __init__(self):
         # Initialize the API client.
         self.__datacatalog = datacatalog.DataCatalogClient()

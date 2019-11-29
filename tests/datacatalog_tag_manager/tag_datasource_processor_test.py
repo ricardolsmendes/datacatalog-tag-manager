@@ -10,7 +10,6 @@ import datacatalog_tag_manager
 
 @mock.patch('datacatalog_tag_manager.tag_datasource_processor.pd.read_csv')
 class TagDatasourceProcessorTest(unittest.TestCase):
-
     @mock.patch(
         'datacatalog_tag_manager.tag_datasource_processor.datacatalog_facade.DataCatalogFacade')
     def setUp(self, mock_datacatalog_facade):
@@ -19,17 +18,17 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.__datacatalog_facade = mock_datacatalog_facade.return_value
 
     def test_constructor_should_set_instance_attributes(self, mock_read_csv):
-        self.assertIsNotNone(
-            self.__tag_datasource_processor.__dict__[
-                '_TagDatasourceProcessor__datacatalog_facade'])
+        self.assertIsNotNone(self.__tag_datasource_processor.
+                             __dict__['_TagDatasourceProcessor__datacatalog_facade'])
 
     def test_create_tags_from_csv_should_succeed(self, mock_read_csv):
-        mock_read_csv.return_value = pd.DataFrame(data={
-            'linked_resource': ['//resource-link'],
-            'template_name': ['test_template'],
-            'field_id': ['string_field'],
-            'field_value': ['Test value']
-        })
+        mock_read_csv.return_value = pd.DataFrame(
+            data={
+                'linked_resource': ['//resource-link'],
+                'template_name': ['test_template'],
+                'field_id': ['string_field'],
+                'field_value': ['Test value']
+            })
 
         datacatalog_facade = self.__datacatalog_facade
         datacatalog_facade.lookup_entry.return_value = make_fake_entry()
@@ -44,12 +43,13 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertEqual('Test value', created_tag.fields['string_field'].string_value)
 
     def test_create_tags_from_csv_missing_values_should_succeed(self, mock_read_csv):
-        mock_read_csv.return_value = pd.DataFrame(data={
-            'linked_resource': ['//resource-link-1', None, '//resource-link-2', None],
-            'template_name': ['test_template', None, 'test_template', None],
-            'field_id': ['bool_field', 'string_field', 'bool_field', 'string_field'],
-            'field_value': ['true', 'Test value 1', 'false', 'Test value 2']
-        })
+        mock_read_csv.return_value = pd.DataFrame(
+            data={
+                'linked_resource': ['//resource-link-1', None, '//resource-link-2', None],
+                'template_name': ['test_template', None, 'test_template', None],
+                'field_id': ['bool_field', 'string_field', 'bool_field', 'string_field'],
+                'field_value': ['true', 'Test value 1', 'false', 'Test value 2']
+            })
 
         datacatalog_facade = self.__datacatalog_facade
         datacatalog_facade.lookup_entry.return_value = make_fake_entry()
@@ -70,12 +70,13 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertEqual('Test value 2', created_tag_2.fields['string_field'].string_value)
 
     def test_create_tags_from_csv_unordered_columns_should_succeed(self, mock_read_csv):
-        mock_read_csv.return_value = pd.DataFrame(data={
-            'field_id': ['string_field'],
-            'template_name': ['test_template'],
-            'field_value': ['Test value'],
-            'linked_resource': ['//resource-link']
-        })
+        mock_read_csv.return_value = pd.DataFrame(
+            data={
+                'field_id': ['string_field'],
+                'template_name': ['test_template'],
+                'field_value': ['Test value'],
+                'linked_resource': ['//resource-link']
+            })
 
         datacatalog_facade = self.__datacatalog_facade
         datacatalog_facade.lookup_entry.return_value = make_fake_entry()
@@ -90,13 +91,14 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertEqual('Test value', created_tag.fields['string_field'].string_value)
 
     def test_create_tags_from_csv_column_metadata_should_succeed(self, mock_read_csv):
-        mock_read_csv.return_value = pd.DataFrame(data={
-            'linked_resource': ['//resource-link', '//resource-link'],
-            'template_name': ['test_template', 'test_template'],
-            'column': ['test_column', None],
-            'field_id': ['bool_field', 'string_field'],
-            'field_value': ['true', 'Test value']
-        })
+        mock_read_csv.return_value = pd.DataFrame(
+            data={
+                'linked_resource': ['//resource-link', '//resource-link'],
+                'template_name': ['test_template', 'test_template'],
+                'column': ['test_column', None],
+                'field_id': ['bool_field', 'string_field'],
+                'field_value': ['true', 'Test value']
+            })
 
         datacatalog_facade = self.__datacatalog_facade
         datacatalog_facade.lookup_entry.return_value = make_fake_entry()
@@ -117,14 +119,15 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertFalse('string_field' in created_tag_2.fields)
 
     def test_create_tags_from_csv_permission_denied_lookup_entry_should_skip_resource(
-            self, mock_read_csv):
+        self, mock_read_csv):
 
-        mock_read_csv.return_value = pd.DataFrame(data={
-            'linked_resource': ['//unreachable-resource-link', '//resource-link'],
-            'template_name': [None, 'test_template'],
-            'field_id': [None, 'string_field'],
-            'field_value': [None, 'Test value']
-        })
+        mock_read_csv.return_value = pd.DataFrame(
+            data={
+                'linked_resource': ['//unreachable-resource-link', '//resource-link'],
+                'template_name': [None, 'test_template'],
+                'field_id': [None, 'string_field'],
+                'field_value': [None, 'Test value']
+            })
 
         datacatalog_facade = self.__datacatalog_facade
         datacatalog_facade.lookup_entry.side_effect = \
@@ -140,14 +143,15 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertEqual('Test value', created_tag.fields['string_field'].string_value)
 
     def test_create_tags_from_csv_permission_denied_get_template_should_skip_template(
-            self, mock_read_csv):
+        self, mock_read_csv):
 
-        mock_read_csv.return_value = pd.DataFrame(data={
-            'linked_resource': ['//resource-link', '//resource-link'],
-            'template_name': ['unreachable_test_template', 'test_template'],
-            'field_id': [None, 'string_field'],
-            'field_value': [None, 'Test value']
-        })
+        mock_read_csv.return_value = pd.DataFrame(
+            data={
+                'linked_resource': ['//resource-link', '//resource-link'],
+                'template_name': ['unreachable_test_template', 'test_template'],
+                'field_id': [None, 'string_field'],
+                'field_value': [None, 'Test value']
+            })
 
         datacatalog_facade = self.__datacatalog_facade
         datacatalog_facade.lookup_entry.return_value = make_fake_entry()

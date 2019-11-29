@@ -7,7 +7,6 @@ from datacatalog_tag_manager import datacatalog_facade
 
 
 class DataCatalogFacadeTest(unittest.TestCase):
-
     @mock.patch('datacatalog_tag_manager.datacatalog_facade.datacatalog.DataCatalogClient')
     def setUp(self, mock_datacatalog_client):
         self.__datacatalog_facade = datacatalog_facade.DataCatalogFacade()
@@ -15,8 +14,7 @@ class DataCatalogFacadeTest(unittest.TestCase):
         self.__datacatalog_client = mock_datacatalog_client.return_value
 
     def test_constructor_should_set_instance_attributes(self):
-        self.assertIsNotNone(
-            self.__datacatalog_facade.__dict__['_DataCatalogFacade__datacatalog'])
+        self.assertIsNotNone(self.__datacatalog_facade.__dict__['_DataCatalogFacade__datacatalog'])
 
     def test_create_or_update_tag_nonexistent_should_create(self):
         datacatalog = self.__datacatalog_client
