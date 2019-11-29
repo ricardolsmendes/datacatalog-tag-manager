@@ -7,6 +7,7 @@ from datacatalog_tag_manager import datacatalog_facade
 
 
 class DataCatalogFacadeTest(unittest.TestCase):
+
     @mock.patch('datacatalog_tag_manager.datacatalog_facade.datacatalog.DataCatalogClient')
     def setUp(self, mock_datacatalog_client):
         self.__datacatalog_facade = datacatalog_facade.DataCatalogFacade()

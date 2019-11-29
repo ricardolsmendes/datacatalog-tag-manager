@@ -7,6 +7,7 @@ from . import constant, datacatalog_entity_factory, datacatalog_facade
 
 
 class TagDatasourceProcessor:
+
     def __init__(self):
         self.__datacatalog_facade = datacatalog_facade.DataCatalogFacade()
 

@@ -10,6 +10,7 @@ import datacatalog_tag_manager
 
 @mock.patch('datacatalog_tag_manager.tag_datasource_processor.pd.read_csv')
 class TagDatasourceProcessorTest(unittest.TestCase):
+
     @mock.patch(
         'datacatalog_tag_manager.tag_datasource_processor.datacatalog_facade.DataCatalogFacade')
     def setUp(self, mock_datacatalog_facade):

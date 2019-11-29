@@ -5,6 +5,7 @@ import datacatalog_tag_manager
 
 
 class TagManagerCLITest(unittest.TestCase):
+
     def test_parse_args_invalid_subcommand_should_raise_system_exit(self):
         self.assertRaises(SystemExit, datacatalog_tag_manager.TagManagerCLI._parse_args,
                           ['invalid-subcommand'])
