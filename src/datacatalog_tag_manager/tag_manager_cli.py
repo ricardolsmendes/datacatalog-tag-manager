@@ -5,6 +5,7 @@ from . import tag_datasource_processor
 
 
 class TagManagerCLI:
+
     @classmethod
     def run(cls, argv):
         cls.__setup_logging()
