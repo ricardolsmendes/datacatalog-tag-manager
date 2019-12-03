@@ -1,21 +1,26 @@
-FROM python:3.7
-WORKDIR /app
+FROM python:3.6
 
-# Copy the credentials file and use it to set the GOOGLE_APPLICATION_CREDENTIALS environment variable.
-COPY ./credentials/*.json ./credentials/
-ENV GOOGLE_APPLICATION_CREDENTIALS=./credentials/datacatalog-tag-manager.json
+# Set the GOOGLE_APPLICATION_CREDENTIALS environment variable.
+# At run time, /credentials must be binded to a volume containing a valid
+# Service Account credentials file named datacatalog-tag-manager.json.
+ENV GOOGLE_APPLICATION_CREDENTIALS=/credentials/datacatalog-tag-manager.json
+
+# Install static code quality assurance tools.
+RUN pip install flake8 yapf
+
+WORKDIR /app
 
 # Copy project files (see .dockerignore).
 COPY . .
 
-# Run a linter.
-RUN pip install --upgrade flake8
+# Run static code quality assurance checks.
+RUN yapf --diff --recursive src tests
 RUN flake8 src tests
-
-# Install the package and its dependencies.
-RUN pip install .
 
 # Run the unit tests.
 RUN python setup.py test
+
+# Install the package.
+RUN pip install .
 
 ENTRYPOINT ["python", "main.py"]

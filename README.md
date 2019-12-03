@@ -52,21 +52,23 @@ export GOOGLE_APPLICATION_CREDENTIALS=./credentials/datacatalog-tag-manager.json
 
 ### 1.4. Docker
 
-Docker may be used as an alternative to run all the scripts. In this case, please disregard the [Virtualenv](#13-virtualenv) install instructions.
+Docker may be used as an alternative to run all the scripts. In this case, please disregard the
+[Virtualenv](#13-virtualenv) install instructions.
 
 ## 2. Load Tags from CSV file
 
 ### 2.1. Create a CSV file representing the Tags to be created
 
-Tags are composed by as many lines as required to represent all of their fields. The columns are described as follows:
+Tags are composed by as many lines as required to represent all of their fields. The columns are
+described as follows:
 
-| Column              | Description                                                            | Mandatory |
-| ---                 | ---                                                                    | ---       |
-| **linked_resource** | The full name of the asset the Entry refers to.                        | Y         |
-| **template_name**   | The resource name of the Tag Template that the Tag uses.               | Y         |
-| **column**          | Allows attaching Tags to an individual column based on Entry's schema. | N         |
-| **field_id**        | The name of the Tag field.                                             | Y         |
-| **field_value**     | The value of the Tag field.                                            | Y         |
+| Column              | Description                                        | Mandatory |
+| ---                 | ---                                                | ---       |
+| **linked_resource** | Full name of the asset the Entry refers to.        | Y         |
+| **template_name**   | Resource name of the Tag Template for the Tag.     | Y         |
+| **column**          | Attach Tags to a column belonging to Entry schema. | N         |
+| **field_id**        | Name of the Tag field.                             | Y         |
+| **field_value**     | Value of the Tag field.                            | Y         |
 
 *TIPS* 
 - *`sample-input/create-tags` for reference;*
@@ -77,17 +79,16 @@ Tags are composed by as many lines as required to represent all of their fields.
 - python
 
 ```bash
-python main.py create-tags \
-  --csv-file CSV_FILE_PATH
+python main.py create-tags --csv-file CSV_FILE_PATH
 ```
 
 - docker
 
 ```bash
 docker build --rm --tag datacatalog-tag-manager .
-docker run --rm --tty -v CSV_FILE_FOLDER:/data datacatalog-tag-manager \
-  create-tags \
-  --csv-file /data/CSV_FILE_NAME
+docker run --rm --tty \
+  -v ./credentials:/credentials -v CSV_FILE_FOLDER:/data \
+  datacatalog-tag-manager create-tags --csv-file /data/CSV_FILE_NAME
 ```
 
 [1]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager.svg?style=svg

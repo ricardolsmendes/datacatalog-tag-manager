@@ -110,6 +110,12 @@ venv.bak/
 # Application logs
 log/
 
+# GCP access files
+credentials/
+
+# CI/CD
+.circleci/
+
 # Docker
 .dockerignore
 Dockerfile
