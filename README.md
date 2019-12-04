@@ -87,7 +87,7 @@ python main.py create-tags --csv-file CSV_FILE_PATH
 ```bash
 docker build --rm --tag datacatalog-tag-manager .
 docker run --rm --tty \
-  -v ./credentials:/credentials -v CSV_FILE_FOLDER:/data \
+  --volume CREDENTIALS_FILE_FOLDER:/credentials --volume CSV_FILE_FOLDER:/data \
   datacatalog-tag-manager create-tags --csv-file /data/CSV_FILE_NAME
 ```
 
