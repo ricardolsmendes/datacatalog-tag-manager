@@ -23,4 +23,4 @@ RUN python setup.py test
 # Install the package.
 RUN pip install .
 
-ENTRYPOINT ["python", "main.py"]
+ENTRYPOINT ["datacatalog-tag-manager"]

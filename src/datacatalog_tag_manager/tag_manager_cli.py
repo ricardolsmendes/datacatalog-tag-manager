@@ -1,5 +1,6 @@
 import argparse
 import logging
+import sys
 
 from . import tag_datasource_processor
 
@@ -36,3 +37,12 @@ class TagManagerCLI:
     def __create_tags(cls, args):
         tag_datasource_processor.TagDatasourceProcessor().create_tags_from_csv(
             file_path=args.csv_file)
+
+
+def main():
+    argv = sys.argv
+    TagManagerCLI.run(argv[1:] if len(argv) > 0 else argv)
+
+
+if __name__ == '__main__':
+    main()
