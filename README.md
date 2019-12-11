@@ -8,7 +8,7 @@ A Python package to manage Google Cloud Data Catalog tags, loading metadata from
 
 ### 1.1. Python + virtualenv
 
-Using _virtualenv_ is optional, but strongly recommended unless you use [Docker](#12-docker).
+Using [virtualenv][3] is optional, but strongly recommended unless you use [Docker](#12-docker).
 
 #### 1.1.1. Install Python 3.6+
 
@@ -36,7 +36,7 @@ source ./env/bin/activate
 #### 1.1.4. Install the package
 
 ```bash
-pip install git+https://github.com/ricardolsmendes/datacatalog-tag-manager.git
+pip install git+https://github.com/ricardolsmendes/datacatalog-tag-manager
 ```
 
 ### 1.2. Docker
@@ -44,10 +44,10 @@ pip install git+https://github.com/ricardolsmendes/datacatalog-tag-manager.git
 Docker may be used as an alternative to run the script. In this case, please disregard the
 [Virtualenv](#11-python--virtualenv) setup instructions.
 
-### 1.2.1. Get the source code
+#### 1.2.1. Get the source code
 ```bash
 git clone https://github.com/ricardolsmendes/datacatalog-tag-manager
-cd datacatalog-tag-manager
+cd ./datacatalog-tag-manager
 ```
 
 ### 1.3. Auth credentials
@@ -85,8 +85,8 @@ described as follows:
 | **field_value**     | Value of the Tag field.                                | Y         |
 
 *TIPS* 
-- [sample-input/create-tags][3] for reference;
-- [Data Catalog Sample Tags][4] (Google Sheets) may help to create/export the CSV.
+- [sample-input/create-tags][4] for reference;
+- [Data Catalog Sample Tags][5] (Google Sheets) may help to create/export the CSV.
 
 ### 2.2. Run the datacatalog-tag-manager script
 
@@ -107,5 +107,6 @@ docker run --rm --tty \
 
 [1]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager.svg?style=svg
 [2]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager
-[3]: https://github.com/ricardolsmendes/datacatalog-tag-manager/tree/master/sample-input/create-tags
-[4]: https://docs.google.com/spreadsheets/d/1bqeAXjLHUq0bydRZj9YBhdlDtuu863nwirx8t4EP_CQ
+[3]: https://virtualenv.pypa.io/en/latest/
+[4]: https://github.com/ricardolsmendes/datacatalog-tag-manager/tree/master/sample-input/create-tags
+[5]: https://docs.google.com/spreadsheets/d/1bqeAXjLHUq0bydRZj9YBhdlDtuu863nwirx8t4EP_CQ
