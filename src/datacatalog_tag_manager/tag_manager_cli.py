@@ -42,7 +42,3 @@ class TagManagerCLI:
 def main():
     argv = sys.argv
     TagManagerCLI.run(argv[1:] if len(argv) > 0 else argv)
-
-
-if __name__ == '__main__':
-    main()
