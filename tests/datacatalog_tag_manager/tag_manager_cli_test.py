@@ -1,6 +1,7 @@
 import unittest
 from unittest import mock
 
+import datacatalog_tag_manager
 from datacatalog_tag_manager import tag_manager_cli
 
 
@@ -28,3 +29,8 @@ class TagManagerCLITest(unittest.TestCase):
         tag_datasource_processor = mock_tag_datasource_processor.return_value
         tag_datasource_processor.create_tags_from_csv.assert_called_once()
         tag_datasource_processor.create_tags_from_csv.assert_called_with(file_path='test.csv')
+
+    @mock.patch('datacatalog_tag_manager.tag_manager_cli.TagManagerCLI')
+    def test_main_should_call_cli_run(self, mock_cli):
+        datacatalog_tag_manager.main()
+        mock_cli.run.assert_called_once()
