@@ -18,7 +18,21 @@ class TagDatasourceProcessor:
         :param file_path: The CSV file path.
         :return: A list with all Tags created.
         """
-        return self.__create_tags_from_dataframe(pd.read_csv(file_path))
+        logging.info('')
+        logging.info('===> Create Tags from CSV [STARTED]')
+
+        logging.info('')
+        logging.info('Reading CSV file: %s...', file_path)
+        dataframe = pd.read_csv(file_path)
+
+        logging.info('')
+        logging.info(f'Creating the Tags...')
+        created_tags = self.__create_tags_from_dataframe(dataframe)
+
+        logging.info('')
+        logging.info('==== Create Tags from CSV [FINISHED] =============')
+
+        return created_tags
 
     def __create_tags_from_dataframe(self, dataframe):
         normalized_df = self.__normalize_dataframe(dataframe)
