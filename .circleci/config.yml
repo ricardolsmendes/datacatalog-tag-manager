@@ -42,4 +42,4 @@ jobs:
 
       - store_artifacts:
           path: htmlcov
-          destination: test-reports
+          destination: htmlcov
