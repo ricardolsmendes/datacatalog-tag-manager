@@ -30,6 +30,7 @@ jobs:
   lint:
     executor: python-executor
     steps:
+      - checkout
       - attach_workspace:
           at: .
       - run:
@@ -48,6 +49,7 @@ jobs:
   test:
     executor: python-executor
     steps:
+      - checkout
       - attach_workspace:
           at: .
       - run:
