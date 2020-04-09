@@ -56,7 +56,12 @@ jobs:
           name: Run the unit tests
           command: |
             . venv/bin/activate
+            pip install --upgrade setuptools
             python setup.py test
+      - persist_to_workspace:
+          root: .
+          paths:
+            - venv
       - store_artifacts:
           path: htmlcov
           destination: htmlcov
@@ -71,7 +76,7 @@ jobs:
           name: Publish to PyPI
           command: |
             . venv/bin/activate
-            pip install --upgrade twine
+            pip install --upgrade twine wheel
             python setup.py sdist
             python setup.py bdist_wheel --universal
             twine upload dist/*
