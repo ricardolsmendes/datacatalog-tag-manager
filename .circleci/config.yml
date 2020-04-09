@@ -23,9 +23,7 @@ jobs:
             . venv/bin/activate
             pip install --upgrade pip
       - persist_to_workspace:
-          root: workspace
-          paths:
-            - venv
+          root: venv
 
   lint:
     executor: python-executor
