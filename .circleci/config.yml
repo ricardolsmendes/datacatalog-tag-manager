@@ -64,6 +64,7 @@ jobs:
   publish:
     executor: python-executor
     steps:
+      - checkout
       - attach_workspace:
           at: .
       - run:
