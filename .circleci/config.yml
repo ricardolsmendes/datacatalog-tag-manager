@@ -23,13 +23,15 @@ jobs:
             . venv/bin/activate
             pip install --upgrade pip
       - persist_to_workspace:
-          root: venv
+          root: .
+          paths:
+            - venv
 
   lint:
     executor: python-executor
     steps:
       - attach_workspace:
-          at: venv
+          at: .
       - run:
           name: Activate the virtual environment
           command: |
@@ -49,7 +51,7 @@ jobs:
     executor: python-executor
     steps:
       - attach_workspace:
-          at: venv
+          at: .
       - run:
           name: Run the unit tests
           command: |
@@ -63,7 +65,7 @@ jobs:
     executor: python-executor
     steps:
       - attach_workspace:
-          at: venv
+          at: .
       - run:
           name: Publish to PyPI
           command: |
