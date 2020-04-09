@@ -2,7 +2,7 @@
 #
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
-version: 2
+version: 2.1
 
 executors:
   python-executor:
@@ -62,7 +62,6 @@ jobs:
             pip install --upgrade twine
 
 workflows:
-  version: 2
   test-and-publish:
     jobs:
       - set-up
