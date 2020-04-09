@@ -36,7 +36,7 @@ source ./env/bin/activate
 #### 1.1.4. Install the package
 
 ```bash
-pip install --upgrade git+https://github.com/ricardolsmendes/datacatalog-tag-manager
+pip install --upgrade datacatalog-tag-manager
 ```
 
 ### 1.2. Docker
