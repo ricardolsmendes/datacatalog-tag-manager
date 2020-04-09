@@ -12,7 +12,7 @@ executors:
 
 jobs:
 
-  set_up:
+  set-up:
     executor: python-executor
     steps:
       - checkout
@@ -65,14 +65,14 @@ workflows:
   version: 2
   test-and-publish:
     jobs:
-      - set_up
-      - lint
+      - set-up
+      - lint:
           requires:
-            - set_up
-      - test
+            - set-up
+      - test:
           requires:
             - lint
-      - publish
+      - publish:
           requires:
             - test
           #tags:
