@@ -94,7 +94,8 @@ workflows:
       - publish:
           requires:
             - test
-          #tags:
-          #  only: /^v[0-9]+(\.[0-9]+)*$/
-          #branches:
-          #  ignore: /.*/
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v[0-9]+(\.[0-9]+)*$/
