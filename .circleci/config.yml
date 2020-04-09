@@ -2,31 +2,43 @@
 #
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
-version: 2
-jobs:
-  build:
+version: 2.1
+
+executors:
+  python-executor:
     docker:
       - image: circleci/python:3.6.9
-
     working_directory: ~/repo
 
+jobs:
+
+  set-up:
+    executor: python-executor
     steps:
       - checkout
-
       - run:
           name: Set up a virtual environment
           command: |
             python3 -m venv venv
             . venv/bin/activate
             pip install --upgrade pip
+      - persist_to_workspace:
+          root: .
+          paths:
+            - venv
 
+  lint:
+    executor: python-executor
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
       - run:
           name: Run YAPF style check on source and test code
           command: |
             . venv/bin/activate
             pip install --upgrade yapf
             yapf --diff --recursive ./src ./tests
-
       - run:
           name: Run Flake8 linter on source and test code
           command: |
@@ -34,12 +46,56 @@ jobs:
             pip install --upgrade flake8
             flake8 ./src ./tests
 
+  test:
+    executor: python-executor
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
       - run:
           name: Run the unit tests
           command: |
             . venv/bin/activate
+            pip install --upgrade setuptools
             python setup.py test
-
+      - persist_to_workspace:
+          root: .
+          paths:
+            - venv
       - store_artifacts:
           path: htmlcov
           destination: htmlcov
+
+  publish:
+    executor: python-executor
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Publish to PyPI
+          command: |
+            . venv/bin/activate
+            pip install --upgrade twine wheel
+            python setup.py sdist
+            python setup.py bdist_wheel --universal
+            twine upload dist/*
+
+workflows:
+  test-and-publish:
+    jobs:
+      - set-up
+      - lint:
+          requires:
+            - set-up
+      - test:
+          requires:
+            - lint
+      - publish:
+          requires:
+            - test
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v[0-9]+(\.[0-9]+)*$/
