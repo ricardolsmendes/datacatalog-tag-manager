@@ -22,26 +22,36 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install --upgrade pip
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - venv
 
   lint:
     executor: python-executor
     steps:
+      - attach_workspace:
+          at: venv
+      - run:
+          name: Activate the virtual environment
+          command: |
+            . venv/bin/activate
       - run:
           name: Run YAPF style check on source and test code
           command: |
-            . venv/bin/activate
             pip install --upgrade yapf
             yapf --diff --recursive ./src ./tests
       - run:
           name: Run Flake8 linter on source and test code
           command: |
-            . venv/bin/activate
             pip install --upgrade flake8
             flake8 ./src ./tests
 
   test:
     executor: python-executor
     steps:
+      - attach_workspace:
+          at: venv
       - run:
           name: Run the unit tests
           command: |
@@ -54,7 +64,8 @@ jobs:
   publish:
     executor: python-executor
     steps:
-      - checkout
+      - attach_workspace:
+          at: venv
       - run:
           name: Publish to PyPI
           command: |
