@@ -71,6 +71,9 @@ jobs:
           command: |
             . venv/bin/activate
             pip install --upgrade twine
+            python setup.py sdist
+            python setup.py bdist_wheel --universal
+            twine upload dist/*
 
 workflows:
   test-and-publish:
