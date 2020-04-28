@@ -28,8 +28,7 @@ class TagDatasourceProcessor:
         logging.info('')
         logging.info(f'Creating the Tags...')
         created_tags = self.__execute_datacatalog_tags_method_on_dataframe(
-            dataframe,
-            datacatalog_tags_method=self.__datacatalog_facade.create_or_update_tag)
+            dataframe, datacatalog_tags_method=self.__datacatalog_facade.create_or_update_tag)
 
         logging.info('')
         logging.info('==== Create Tags from CSV [FINISHED] =============')
@@ -53,8 +52,7 @@ class TagDatasourceProcessor:
         logging.info('')
         logging.info(f'Deleting the Tags...')
         deleted_tag_names = self.__execute_datacatalog_tags_method_on_dataframe(
-            dataframe,
-            datacatalog_tags_method=self.__datacatalog_facade.delete_tag)
+            dataframe, datacatalog_tags_method=self.__datacatalog_facade.delete_tag)
 
         logging.info('')
         logging.info('==== Delete Tags from CSV [FINISHED] =============')
@@ -84,10 +82,7 @@ class TagDatasourceProcessor:
 
             tags = self.__create_tags_from_templates_dataframe(templates_subset)
 
-            results.extend([
-                datacatalog_tags_method(catalog_entry.name, tag)
-                for tag in tags
-            ])
+            results.extend([datacatalog_tags_method(catalog_entry.name, tag) for tag in tags])
 
         return results
 
