@@ -27,18 +27,45 @@ class TagDatasourceProcessor:
 
         logging.info('')
         logging.info(f'Creating the Tags...')
-        created_tags = self.__create_tags_from_dataframe(dataframe)
+        created_tags = self.__execute_datacatalog_tags_method_on_dataframe(
+            dataframe,
+            datacatalog_tags_method=self.__datacatalog_facade.create_or_update_tag)
 
         logging.info('')
         logging.info('==== Create Tags from CSV [FINISHED] =============')
 
         return created_tags
 
-    def __create_tags_from_dataframe(self, dataframe):
+    def delete_tags_from_csv(self, file_path):
+        """
+        Delete Tags by reading information from a CSV file.
+
+        :param file_path: The CSV file path.
+        :return: A list with all Tags created.
+        """
+        logging.info('')
+        logging.info('===> Delete Tags from CSV [STARTED]')
+
+        logging.info('')
+        logging.info('Reading CSV file: %s...', file_path)
+        dataframe = pd.read_csv(file_path)
+
+        logging.info('')
+        logging.info(f'Deleting the Tags...')
+        deleted_tag_names = self.__execute_datacatalog_tags_method_on_dataframe(
+            dataframe,
+            datacatalog_tags_method=self.__datacatalog_facade.delete_tag)
+
+        logging.info('')
+        logging.info('==== Delete Tags from CSV [FINISHED] =============')
+
+        return deleted_tag_names
+
+    def __execute_datacatalog_tags_method_on_dataframe(self, dataframe, datacatalog_tags_method):
         normalized_df = self.__normalize_dataframe(dataframe)
         normalized_df.set_index(constant.TAGS_DS_LINKED_RESOURCE_COLUMN_LABEL, inplace=True)
 
-        created_tags = []
+        results = []
         for linked_resource in normalized_df.index.unique().tolist():
             try:
                 catalog_entry = self.__datacatalog_facade.lookup_entry(linked_resource)
@@ -57,12 +84,12 @@ class TagDatasourceProcessor:
 
             tags = self.__create_tags_from_templates_dataframe(templates_subset)
 
-            created_tags.extend([
-                self.__datacatalog_facade.create_or_update_tag(catalog_entry.name, tag)
+            results.extend([
+                datacatalog_tags_method(catalog_entry.name, tag)
                 for tag in tags
             ])
 
-        return created_tags
+        return results
 
     @classmethod
     def __normalize_dataframe(cls, dataframe):
