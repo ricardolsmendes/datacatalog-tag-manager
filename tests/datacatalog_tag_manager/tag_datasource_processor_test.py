@@ -149,7 +149,7 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertFalse('string_field' in created_tag_2.fields)
 
     def test_create_tags_from_csv_permission_denied_lookup_entry_should_skip_resource(
-        self, mock_read_csv):  # noqa
+            self, mock_read_csv):
 
         mock_read_csv.return_value = pd.DataFrame(
             data={
@@ -173,7 +173,7 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertEqual('Test value', created_tag.fields['string_field'].string_value)
 
     def test_create_tags_from_csv_permission_denied_get_template_should_skip_template(
-        self, mock_read_csv):  # noqa
+            self, mock_read_csv):
 
         mock_read_csv.return_value = pd.DataFrame(
             data={
