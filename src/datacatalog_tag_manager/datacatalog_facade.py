@@ -42,8 +42,8 @@ class DataCatalogFacade:
             self.__datacatalog.delete_tag(name=tag_name)
             return tag_name
         except StopIteration:
-            self.__log_operation_start('Tag not found for Tag Template: %s'
-                                       ' / Column: %s', tag.template, tag.column)
+            logging.error('Tag not found for Tag Template: %s'
+                          ' / Column: %s', tag.template, tag.column)
 
     @lru_cache(maxsize=16)
     def get_tag_template(self, name):
