@@ -31,11 +31,22 @@ class TagManagerCLI:
                                         required=True)
         create_tags_parser.set_defaults(func=cls.__create_tags)
 
+        delete_tags_parser = subparsers.add_parser('delete-tags', help='Delete Tags')
+        delete_tags_parser.add_argument('--csv-file',
+                                        help='CSV file with Tags information',
+                                        required=True)
+        delete_tags_parser.set_defaults(func=cls.__delete_tags)
+
         return parser.parse_args(argv)
 
     @classmethod
     def __create_tags(cls, args):
         tag_datasource_processor.TagDatasourceProcessor().create_tags_from_csv(
+            file_path=args.csv_file)
+
+    @classmethod
+    def __delete_tags(cls, args):
+        tag_datasource_processor.TagDatasourceProcessor().delete_tags_from_csv(
             file_path=args.csv_file)
 
 

@@ -41,6 +41,34 @@ class DataCatalogFacadeTest(unittest.TestCase):
         datacatalog.update_tag.assert_called_once()
         datacatalog.update_tag.assert_called_with(tag=tag_2)
 
+    def test_delete_tag_should_call_client_library_method(self):
+        tag = make_fake_tag()
+
+        tag_name = 'my_tag_name'
+        existent_tag = make_fake_tag()
+        existent_tag.name = tag_name
+
+        datacatalog = self.__datacatalog_client
+        datacatalog.list_tags.return_value = [existent_tag]
+
+        self.__datacatalog_facade.delete_tag('entry_name', tag)
+
+        datacatalog = self.__datacatalog_client
+        datacatalog.list_tags.assert_called_once()
+        datacatalog.delete_tag.assert_called_with(name=tag_name)
+
+    def test_delete_tag_nonexistent_should_not_call_delete(self):
+        tag = make_fake_tag()
+
+        datacatalog = self.__datacatalog_client
+        datacatalog.list_tags.return_value = []
+
+        self.__datacatalog_facade.delete_tag('entry_name', tag)
+
+        datacatalog = self.__datacatalog_client
+        datacatalog.list_tags.assert_called_once()
+        datacatalog.delete_tag.assert_not_called()
+
     def test_get_tag_template_should_call_client_library_method(self):
         self.__datacatalog_facade.get_tag_template(None)
 

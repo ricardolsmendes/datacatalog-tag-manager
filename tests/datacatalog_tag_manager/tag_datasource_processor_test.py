@@ -37,11 +37,40 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         datacatalog_facade.create_or_update_tag.side_effect = lambda *args: args[1]
 
         created_tags = self.__tag_datasource_processor.create_tags_from_csv('file-path')
+
+        datacatalog_facade.create_or_update_tag.assert_called_once()
+        datacatalog_facade.delete_tag.assert_not_called()
+
         self.assertEqual(1, len(created_tags))
 
         created_tag = created_tags[0]
         self.assertEqual('test_template', created_tag.template)
         self.assertEqual('Test value', created_tag.fields['string_field'].string_value)
+
+    def test_delete_tags_from_csv_should_succeed(self, mock_read_csv):
+        mock_read_csv.return_value = pd.DataFrame(
+            data={
+                'linked_resource': ['//resource-link'],
+                'template_name': ['test_template'],
+                'field_id': ['string_field'],
+                'field_value': ['Test value']
+            })
+
+        tag_name = 'my_tag_name'
+        datacatalog_facade = self.__datacatalog_facade
+        datacatalog_facade.lookup_entry.return_value = make_fake_entry()
+        datacatalog_facade.get_tag_template.return_value = make_fake_tag_template()
+        datacatalog_facade.delete_tag.return_value = tag_name
+
+        deleted_tag_names = self.__tag_datasource_processor.delete_tags_from_csv('file-path')
+
+        datacatalog_facade.delete_tag.assert_called_once()
+        datacatalog_facade.create_or_update_tag.assert_not_called()
+
+        self.assertEqual(1, len(deleted_tag_names))
+
+        deleted_tag_name = deleted_tag_names[0]
+        self.assertEqual(tag_name, deleted_tag_name)
 
     def test_create_tags_from_csv_missing_values_should_succeed(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(

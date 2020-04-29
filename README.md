@@ -88,7 +88,7 @@ described as follows:
 - [sample-input/create-tags][4] for reference;
 - [Data Catalog Sample Tags][5] (Google Sheets) may help to create/export the CSV.
 
-### 2.2. Run the datacatalog-tag-manager script
+### 2.2. Create tags with datacatalog-tag-manager
 
 - Python + virtualenv
 
@@ -103,6 +103,14 @@ docker build --rm --tag datacatalog-tag-manager .
 docker run --rm --tty \
   --volume CREDENTIALS_FILE_FOLDER:/credentials --volume CSV_FILE_FOLDER:/data \
   datacatalog-tag-manager create-tags --csv-file /data/CSV_FILE_NAME
+```
+
+### 2.3. Delete tags with datacatalog-tag-manager
+
+- Python + virtualenv
+
+```bash
+datacatalog-tag-manager delete-tags --csv-file CSV_FILE_PATH
 ```
 
 [1]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager.svg?style=svg
