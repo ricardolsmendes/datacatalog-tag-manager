@@ -1,7 +1,7 @@
 # datacatalog-tag-manager
 
 A Python package to manage Google Cloud Data Catalog tags, loading metadata from external
-sources. CSV format is currently supported.
+sources. Currently supports the CSV file format.
 
 [![CircleCI][1]][2]
 
