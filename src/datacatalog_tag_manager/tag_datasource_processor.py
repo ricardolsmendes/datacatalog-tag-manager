@@ -115,10 +115,7 @@ class TagDatasourceProcessor:
                 dataframe.loc[[template_name], constant.TAGS_DS_SCHEMA_COLUMN_COLUMN_LABEL:]
             dataframe.drop(template_name, inplace=True)
 
-            # Remove the rows with no field id since they're not valid from this point
-            columns_subset.dropna(subset=[constant.TAGS_DS_FIELD_ID_COLUMN_LABEL], inplace=True)
-
-            # (1) Add Tag to be attached to the resource
+            # (1) Make Tags to be attached/deleted to/from the resource
 
             # Get a subset with no schema/column information
             null_columns_index = \
@@ -132,7 +129,7 @@ class TagDatasourceProcessor:
                 tags.append(
                     self.__make_tag_from_fields_dataframe(tag_template, null_columns_subset))
 
-            # (2) Add Tags to be attached to resource's columns
+            # (2) Make Tags to be attached/deleted to/from the resource's columns
 
             columns_subset.set_index(constant.TAGS_DS_SCHEMA_COLUMN_COLUMN_LABEL, inplace=True)
 
@@ -161,6 +158,8 @@ class TagDatasourceProcessor:
 
     @classmethod
     def __convert_fields_dataframe_to_dict(cls, dataframe):
+        # Remove the rows with no field id since they're not valid from this point
+        dataframe.dropna(subset=[constant.TAGS_DS_FIELD_ID_COLUMN_LABEL], inplace=True)
         base_dict = dataframe.to_dict(orient='records')
 
         id_to_value_map = {}
