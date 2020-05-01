@@ -1,7 +1,8 @@
+# ======================================================================
 # Python CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-python/ for more details
-#
+# Check https://circleci.com/docs/2.0/language-python/ for more details.
+# ======================================================================
+
 version: 2.1
 
 executors:
@@ -66,7 +67,7 @@ jobs:
             pip install --upgrade flake8
             flake8 ./src ./tests
 
-  publish:
+  release:
     executor: python-executor
     steps:
       - checkout
@@ -82,7 +83,7 @@ jobs:
             twine upload dist/*
 
 workflows:
-  test-and-publish:
+  test-and-release:
     jobs:
       - set-up:
           filters:
@@ -100,7 +101,7 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - publish:
+      - release:
           requires:
             - lint
           filters:
