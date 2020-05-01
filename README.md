@@ -72,7 +72,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=./credentials/datacatalog-tag-manager.json
 
 ## 2. Manage Tags
 
-### 2.2. Create
+### 2.1. Create
 
 The metadata schema to create Tags is described below. Use as many lines as needed to create all
 the Tags and Fields you need.
@@ -89,7 +89,7 @@ the Tags and Fields you need.
 - [sample-input/create-tags][4] for reference;
 - [Data Catalog Sample Tags][6] (Google Sheets) might help to create/export a CSV file.
 
-#### 2.2.1. From a CSV file 
+#### 2.1.1. From a CSV file 
 
 - Python + virtualenv
 
@@ -106,7 +106,7 @@ docker run --rm --tty \
   datacatalog-tag-manager create-tags --csv-file /data/CSV_FILE_NAME
 ```
 
-### 2.3. Delete
+### 2.2. Delete
 
 The metadata schema to delete Tags is described below. Use as many lines as needed to delete all
 the Tags you want.
@@ -121,7 +121,7 @@ the Tags you want.
 - [sample-input/delete-tags][5] for reference;
 - [Data Catalog Sample Tags][6] (Google Sheets) might help to create/export a CSV file.
 
-#### 2.3.1. From a CSV file 
+#### 2.2.1. From a CSV file 
 
 - Python + virtualenv
 
