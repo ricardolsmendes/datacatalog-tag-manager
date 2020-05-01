@@ -1,0 +1,4 @@
+linked_resource,template_name,column
+//bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID,projects/PROJECT_ID/locations/us-central1/tagTemplates/TEMPLATE_ID,
+//bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID/tables/TABLE_ID,projects/PROJECT_ID/locations/us-central1/tagTemplates/TEMPLATE_ID,
+//bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID/tables/TABLE_ID,projects/PROJECT_ID/locations/us-central1/tagTemplates/TEMPLATE_ID,id
