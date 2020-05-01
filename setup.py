@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name='datacatalog-tag-manager',
-    version='0.2.0',
+    version='0.2.1',
     author='Ricardo Mendes',
     author_email='ricardolsmendes@gmail.com',
     description='A package to manage Google Cloud Data Catalog tags,'
