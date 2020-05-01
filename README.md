@@ -1,6 +1,7 @@
 # datacatalog-tag-manager
 
-A Python package to manage Google Cloud Data Catalog tags, loading metadata from external sources.
+A Python package to manage Google Cloud Data Catalog tags, loading metadata from external
+sources. CSV format is currently supported.
 
 [![CircleCI][1]][2]
 
@@ -41,8 +42,8 @@ pip install --upgrade datacatalog-tag-manager
 
 ### 1.2. Docker
 
-Docker may be used as an alternative to run the script. In this case, please disregard the
-[Virtualenv](#11-python--virtualenv) setup instructions.
+Docker may be used as an alternative to run `datacatalog-tag-manager`. In this case, please
+disregard the [above](#11-python--virtualenv) _virtualenv_ setup instructions.
 
 #### 1.2.1. Get the source code
 ```bash
@@ -69,26 +70,26 @@ _This step may be skipped if you're using [Docker](#12-docker)._
 export GOOGLE_APPLICATION_CREDENTIALS=./credentials/datacatalog-tag-manager.json
 ```
 
-## 2. Load Tags from CSV file
+## 2. Manage Tags
 
-### 2.1. Create a CSV file representing the Tags to be created
+### 2.2. Create
 
-Tags are composed of as many lines as required to represent all of their fields. The columns are
-described as follows:
+The metadata schema to create Tags is described below. Use as many lines as needed to create all
+the Tags and Fields you need.
 
-| Column              | Description                                            | Mandatory |
-| ---                 | ---                                                    | ---       |
-| **linked_resource** | Full name of the asset the Entry refers to.            | Y         |
-| **template_name**   | Resource name of the Tag Template for the Tag.         | Y         |
-| **column**          | Attach Tags to a column belonging to the Entry schema. | N         |
-| **field_id**        | Id of the Tag field.                                   | Y         |
-| **field_value**     | Value of the Tag field.                                | Y         |
+| Column              | Description                                           | Mandatory |
+| --------------------| ----------------------------------------------------- | :-------: |
+| **linked_resource** | Full name of the asset the Entry refers to            |    yes    |
+| **template_name**   | Resource name of the Tag Template for the Tag         |    yes    |
+| **column**          | Attach Tags to a column belonging to the Entry schema |     no    |
+| **field_id**        | Id of the Tag field                                   |    yes    |
+| **field_value**     | Value of the Tag field                                |    yes    |
 
 *TIPS* 
 - [sample-input/create-tags][4] for reference;
-- [Data Catalog Sample Tags][5] (Google Sheets) may help to create/export the CSV.
+- [Data Catalog Sample Tags][6] (Google Sheets) might help to create/export a CSV file.
 
-### 2.2. Create tags with datacatalog-tag-manager
+#### 2.2.1. From a CSV file 
 
 - Python + virtualenv
 
@@ -105,7 +106,22 @@ docker run --rm --tty \
   datacatalog-tag-manager create-tags --csv-file /data/CSV_FILE_NAME
 ```
 
-### 2.3. Delete tags with datacatalog-tag-manager
+### 2.3. Delete
+
+The metadata schema to delete Tags is described below. Use as many lines as needed to delete all
+the Tags you want.
+
+| Column              | Description                                             | Mandatory |
+| --------------------| ------------------------------------------------------- | :-------: |
+| **linked_resource** | Full name of the asset the Entry refers to              |    yes    |
+| **template_name**   | Resource name of the Tag Template of the Tag            |    yes    |
+| **column**          | Delete Tags from a column belonging to the Entry schema |     no    |
+
+*TIPS* 
+- [sample-input/delete-tags][5] for reference;
+- [Data Catalog Sample Tags][6] (Google Sheets) might help to create/export a CSV file.
+
+#### 2.3.1. From a CSV file 
 
 - Python + virtualenv
 
@@ -113,8 +129,18 @@ docker run --rm --tty \
 datacatalog-tag-manager delete-tags --csv-file CSV_FILE_PATH
 ```
 
+- Docker
+
+```bash
+docker build --rm --tag datacatalog-tag-manager .
+docker run --rm --tty \
+  --volume CREDENTIALS_FILE_FOLDER:/credentials --volume CSV_FILE_FOLDER:/data \
+  datacatalog-tag-manager delete-tags --csv-file /data/CSV_FILE_NAME
+```
+
 [1]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager.svg?style=svg
 [2]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager
 [3]: https://virtualenv.pypa.io/en/latest/
-[4]: https://github.com/ricardolsmendes/datacatalog-tag-manager/tree/master/sample-input/create-tags
-[5]: https://docs.google.com/spreadsheets/d/1bqeAXjLHUq0bydRZj9YBhdlDtuu863nwirx8t4EP_CQ
+[4]: ./sample-input/create-tags
+[5]: ./sample-input/delete-tags
+[6]: https://docs.google.com/spreadsheets/d/1bqeAXjLHUq0bydRZj9YBhdlDtuu863nwirx8t4EP_CQ

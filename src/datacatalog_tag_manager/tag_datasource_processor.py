@@ -40,7 +40,7 @@ class TagDatasourceProcessor:
         Delete Tags by reading information from a CSV file.
 
         :param file_path: The CSV file path.
-        :return: A list with all Tags created.
+        :return: A list with all Tags deleted.
         """
         logging.info('')
         logging.info('===> Delete Tags from CSV [STARTED]')
@@ -80,7 +80,7 @@ class TagDatasourceProcessor:
             # Save memory by deleting data already copied to a subset.
             normalized_df.drop(linked_resource, inplace=True)
 
-            tags = self.__create_tags_from_templates_dataframe(templates_subset)
+            tags = self.__make_tags_from_templates_dataframe(templates_subset)
 
             results.extend([processor(catalog_entry.name, tag) for tag in tags])
 
@@ -100,7 +100,7 @@ class TagDatasourceProcessor:
 
         return rebuilt_df
 
-    def __create_tags_from_templates_dataframe(self, dataframe):
+    def __make_tags_from_templates_dataframe(self, dataframe):
         tags = []
         for template_name in dataframe.index.unique().tolist():
             try:
@@ -115,7 +115,7 @@ class TagDatasourceProcessor:
                 dataframe.loc[[template_name], constant.TAGS_DS_SCHEMA_COLUMN_COLUMN_LABEL:]
             dataframe.drop(template_name, inplace=True)
 
-            # (1) Add Tag to be attached to the resource
+            # (1) Make Tags to be attached/deleted to/from the resource
 
             # Get a subset with no schema/column information
             null_columns_index = \
@@ -127,18 +127,18 @@ class TagDatasourceProcessor:
                 columns_subset.dropna(subset=[constant.TAGS_DS_SCHEMA_COLUMN_COLUMN_LABEL],
                                       inplace=True)
                 tags.append(
-                    self.__create_tag_from_fields_dataframe(tag_template, null_columns_subset))
+                    self.__make_tag_from_fields_dataframe(tag_template, null_columns_subset))
 
-            # (2) Add Tags to be attached to resource's columns
+            # (2) Make Tags to be attached/deleted to/from the resource's columns
 
             columns_subset.set_index(constant.TAGS_DS_SCHEMA_COLUMN_COLUMN_LABEL, inplace=True)
 
-            tags.extend(self.__create_tags_from_columns_dataframe(tag_template, columns_subset))
+            tags.extend(self.__make_tags_from_columns_dataframe(tag_template, columns_subset))
 
         return tags
 
     @classmethod
-    def __create_tags_from_columns_dataframe(cls, tag_template, dataframe):
+    def __make_tags_from_columns_dataframe(cls, tag_template, dataframe):
         tags = []
 
         # NaN not expected among index values at this point.
@@ -147,17 +147,19 @@ class TagDatasourceProcessor:
             dataframe.drop(column_name, inplace=True)
 
             tags.append(
-                cls.__create_tag_from_fields_dataframe(tag_template, column_subset, column_name))
+                cls.__make_tag_from_fields_dataframe(tag_template, column_subset, column_name))
 
         return tags
 
     @classmethod
-    def __create_tag_from_fields_dataframe(cls, tag_template, dataframe, column=None):
+    def __make_tag_from_fields_dataframe(cls, tag_template, dataframe, column=None):
         return datacatalog_entity_factory.DataCatalogEntityFactory.make_tag(
             tag_template, cls.__convert_fields_dataframe_to_dict(dataframe), column)
 
     @classmethod
     def __convert_fields_dataframe_to_dict(cls, dataframe):
+        # Remove the rows with no field id since they're not valid from this point
+        dataframe.dropna(subset=[constant.TAGS_DS_FIELD_ID_COLUMN_LABEL], inplace=True)
         base_dict = dataframe.to_dict(orient='records')
 
         id_to_value_map = {}
