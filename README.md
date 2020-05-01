@@ -141,6 +141,6 @@ docker run --rm --tty \
 [1]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager.svg?style=svg
 [2]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager
 [3]: https://virtualenv.pypa.io/en/latest/
-[4]: ./sample-input/create-tags
-[5]: ./sample-input/delete-tags
+[4]: https://github.com/ricardolsmendes/datacatalog-tag-manager/tree/master/sample-input/create-tags
+[5]: https://github.com/ricardolsmendes/datacatalog-tag-manager/tree/master/sample-input/delete-tags
 [6]: https://docs.google.com/spreadsheets/d/1bqeAXjLHUq0bydRZj9YBhdlDtuu863nwirx8t4EP_CQ
