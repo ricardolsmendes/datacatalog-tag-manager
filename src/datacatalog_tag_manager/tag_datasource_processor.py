@@ -26,7 +26,7 @@ class TagDatasourceProcessor:
         dataframe = pd.read_csv(file_path)
 
         logging.info('')
-        logging.info(f'Creating the Tags...')
+        logging.info('Creating the Tags...')
         created_tags = self.__process_tags_from_dataframe(
             dataframe, processor=self.__datacatalog_facade.create_or_update_tag)
 
@@ -50,7 +50,7 @@ class TagDatasourceProcessor:
         dataframe = pd.read_csv(file_path)
 
         logging.info('')
-        logging.info(f'Deleting the Tags...')
+        logging.info('Deleting the Tags...')
         deleted_tag_names = self.__process_tags_from_dataframe(
             dataframe, processor=self.__datacatalog_facade.delete_tag)
 
