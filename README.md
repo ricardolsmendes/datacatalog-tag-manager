@@ -5,6 +5,30 @@ sources. Currently supports the CSV file format.
 
 [![CircleCI][1]][2]
 
+## Table of Contents
+
+<!-- toc -->
+
+- [1. Environment setup](#1-environment-setup)
+  * [1.1. Python + virtualenv](#11-python--virtualenv)
+    + [1.1.1. Install Python 3.6+](#111-install-python-36)
+    + [1.1.2. Create a folder](#112-create-a-folder)
+    + [1.1.3. Create and activate an isolated Python environment](#113-create-and-activate-an-isolated-python-environment)
+    + [1.1.4. Install the package](#114-install-the-package)
+  * [1.2. Docker](#12-docker)
+    + [1.2.1. Get the source code](#121-get-the-source-code)
+  * [1.3. Auth credentials](#13-auth-credentials)
+    + [1.3.1. Create a service account and grant it below roles](#131-create-a-service-account-and-grant-it-below-roles)
+    + [1.3.2. Download a JSON key and save it as](#132-download-a-json-key-and-save-it-as)
+    + [1.3.3. Set the environment variables](#133-set-the-environment-variables)
+- [2. Manage Tags](#2-manage-tags)
+  * [2.1. Create](#21-create)
+    + [2.1.1. From a CSV file](#211-from-a-csv-file)
+  * [2.2. Delete](#22-delete)
+    + [2.2.1. From a CSV file](#221-from-a-csv-file)
+
+<!-- tocstop -->
+
 ## 1. Environment setup
 
 ### 1.1. Python + virtualenv
