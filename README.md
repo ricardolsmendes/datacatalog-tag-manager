@@ -118,7 +118,7 @@ the Tags and Fields you need.
 - Python + virtualenv
 
 ```bash
-datacatalog-tag-manager create-tags --csv-file CSV_FILE_PATH
+datacatalog-tags create --csv-file CSV_FILE_PATH
 ```
 
 - Docker
@@ -127,7 +127,7 @@ datacatalog-tag-manager create-tags --csv-file CSV_FILE_PATH
 docker build --rm --tag datacatalog-tag-manager .
 docker run --rm --tty \
   --volume CREDENTIALS_FILE_FOLDER:/credentials --volume CSV_FILE_FOLDER:/data \
-  datacatalog-tag-manager create-tags --csv-file /data/CSV_FILE_NAME
+  datacatalog-tag-manager create --csv-file /data/CSV_FILE_NAME
 ```
 
 ### 2.2. Delete
@@ -150,7 +150,7 @@ the Tags you want.
 - Python + virtualenv
 
 ```bash
-datacatalog-tag-manager delete-tags --csv-file CSV_FILE_PATH
+datacatalog-tags delete --csv-file CSV_FILE_PATH
 ```
 
 - Docker
@@ -159,7 +159,7 @@ datacatalog-tag-manager delete-tags --csv-file CSV_FILE_PATH
 docker build --rm --tag datacatalog-tag-manager .
 docker run --rm --tty \
   --volume CREDENTIALS_FILE_FOLDER:/credentials --volume CSV_FILE_FOLDER:/data \
-  datacatalog-tag-manager delete-tags --csv-file /data/CSV_FILE_NAME
+  datacatalog-tag-manager delete --csv-file /data/CSV_FILE_NAME
 ```
 
 [1]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager.svg?style=svg
