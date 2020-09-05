@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name='datacatalog-tag-manager',
-    version='0.2.4',
+    version='1.0.0',
     url='https://github.com/ricardolsmendes/datacatalog-tag-manager',
     author='Ricardo Mendes',
     author_email='ricardolsmendes@gmail.com',
