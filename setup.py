@@ -14,12 +14,12 @@ setuptools.setup(
     package_dir={'': 'src'},
     entry_points={
         'console_scripts': [
-            'datacatalog-tag-manager = datacatalog_tag_manager:main',
+            'datacatalog-tags = datacatalog_tag_manager:main',
         ],
     },
     include_package_data=True,
     install_requires=(
-        'google-cloud-datacatalog',
+        'google-cloud-datacatalog>=1,<2',
         'pandas',
     ),
     setup_requires=('pytest-runner', ),

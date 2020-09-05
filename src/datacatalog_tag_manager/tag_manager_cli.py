@@ -25,13 +25,13 @@ class TagManagerCLI:
 
         subparsers = parser.add_subparsers()
 
-        create_tags_parser = subparsers.add_parser('create-tags', help='Create Tags')
+        create_tags_parser = subparsers.add_parser('create', help='Create Tags')
         create_tags_parser.add_argument('--csv-file',
                                         help='CSV file with Tags information',
                                         required=True)
         create_tags_parser.set_defaults(func=cls.__create_tags)
 
-        delete_tags_parser = subparsers.add_parser('delete-tags', help='Delete Tags')
+        delete_tags_parser = subparsers.add_parser('delete', help='Delete Tags')
         delete_tags_parser.add_argument('--csv-file',
                                         help='CSV file with Tags information',
                                         required=True)
