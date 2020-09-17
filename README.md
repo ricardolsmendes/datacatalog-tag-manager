@@ -22,7 +22,7 @@ sources. Currently supports the CSV file format.
     + [1.3.2. Download a JSON key and save it as](#132-download-a-json-key-and-save-it-as)
     + [1.3.3. Set the environment variables](#133-set-the-environment-variables)
 - [2. Manage Tags](#2-manage-tags)
-  * [2.1. Create](#21-create)
+  * [2.1. Create or Update](#21-create-or-update)
     + [2.1.1. From a CSV file](#211-from-a-csv-file)
   * [2.2. Delete](#22-delete)
     + [2.2.1. From a CSV file](#221-from-a-csv-file)
@@ -96,13 +96,13 @@ export GOOGLE_APPLICATION_CREDENTIALS=./credentials/datacatalog-tag-manager.json
 
 ## 2. Manage Tags
 
-### 2.1. Create
+### 2.1. Create or Update
 
-The metadata schema to create Tags is described below. Use as many lines as needed to create all
-the Tags and Fields you need.
+The metadata schema to create or update Tags is described below. Use as many lines as needed to
+describe all the Tags and Fields you need.
 
 | Column              | Description                                           | Mandatory |
-| --------------------| ----------------------------------------------------- | :-------: |
+| ------------------- | ----------------------------------------------------- | :-------: |
 | **linked_resource** | Full name of the asset the Entry refers to            |    yes    |
 | **template_name**   | Resource name of the Tag Template for the Tag         |    yes    |
 | **column**          | Attach Tags to a column belonging to the Entry schema |     no    |
@@ -110,7 +110,7 @@ the Tags and Fields you need.
 | **field_value**     | Value of the Tag field                                |    yes    |
 
 *TIPS* 
-- [sample-input/create-tags][4] for reference;
+- [sample-input/upsert-tags][4] for reference;
 - [Data Catalog Sample Tags][6] (Google Sheets) might help to create/export a CSV file.
 
 #### 2.1.1. From a CSV file 
@@ -118,7 +118,7 @@ the Tags and Fields you need.
 - Python + virtualenv
 
 ```bash
-datacatalog-tags create --csv-file CSV_FILE_PATH
+datacatalog-tags upsert --csv-file CSV_FILE_PATH
 ```
 
 - Docker
@@ -127,7 +127,7 @@ datacatalog-tags create --csv-file CSV_FILE_PATH
 docker build --rm --tag datacatalog-tag-manager .
 docker run --rm --tty \
   --volume CREDENTIALS_FILE_FOLDER:/credentials --volume CSV_FILE_FOLDER:/data \
-  datacatalog-tag-manager create --csv-file /data/CSV_FILE_NAME
+  datacatalog-tag-manager upsert --csv-file /data/CSV_FILE_NAME
 ```
 
 ### 2.2. Delete
@@ -136,7 +136,7 @@ The metadata schema to delete Tags is described below. Use as many lines as need
 the Tags you want.
 
 | Column              | Description                                             | Mandatory |
-| --------------------| ------------------------------------------------------- | :-------: |
+| ------------------- | ------------------------------------------------------- | :-------: |
 | **linked_resource** | Full name of the asset the Entry refers to              |    yes    |
 | **template_name**   | Resource name of the Tag Template of the Tag            |    yes    |
 | **column**          | Delete Tags from a column belonging to the Entry schema |     no    |
@@ -165,6 +165,6 @@ docker run --rm --tty \
 [1]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager.svg?style=svg
 [2]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager
 [3]: https://virtualenv.pypa.io/en/latest/
-[4]: https://github.com/ricardolsmendes/datacatalog-tag-manager/tree/master/sample-input/create-tags
+[4]: https://github.com/ricardolsmendes/datacatalog-tag-manager/tree/master/sample-input/upsert-tags
 [5]: https://github.com/ricardolsmendes/datacatalog-tag-manager/tree/master/sample-input/delete-tags
 [6]: https://docs.google.com/spreadsheets/d/1bqeAXjLHUq0bydRZj9YBhdlDtuu863nwirx8t4EP_CQ

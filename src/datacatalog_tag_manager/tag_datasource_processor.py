@@ -1,6 +1,8 @@
 import logging
+from typing import List
 
 from google.api_core import exceptions
+from google.cloud.datacatalog import types
 import pandas as pd
 
 from . import constant, datacatalog_entity_factory, datacatalog_facade
@@ -11,9 +13,9 @@ class TagDatasourceProcessor:
     def __init__(self):
         self.__datacatalog_facade = datacatalog_facade.DataCatalogFacade()
 
-    def create_tags_from_csv(self, file_path):
+    def upsert_tags_from_csv(self, file_path: str) -> List[types.Tag]:
         """
-        Create Tags by reading information from a CSV file.
+        Upsert Tags by reading information from a CSV file.
 
         :param file_path: The CSV file path.
         :return: A list with all Tags created.
@@ -28,14 +30,14 @@ class TagDatasourceProcessor:
         logging.info('')
         logging.info('Creating the Tags...')
         created_tags = self.__process_tags_from_dataframe(
-            dataframe, processor=self.__datacatalog_facade.create_or_update_tag)
+            dataframe, processor=self.__datacatalog_facade.upsert_tag)
 
         logging.info('')
         logging.info('==== Create Tags from CSV [FINISHED] =============')
 
         return created_tags
 
-    def delete_tags_from_csv(self, file_path):
+    def delete_tags_from_csv(self, file_path: str) -> List[str]:
         """
         Delete Tags by reading information from a CSV file.
 

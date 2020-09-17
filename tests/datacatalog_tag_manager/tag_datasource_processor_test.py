@@ -34,11 +34,11 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         datacatalog_facade = self.__datacatalog_facade
         datacatalog_facade.lookup_entry.return_value = make_fake_entry()
         datacatalog_facade.get_tag_template.return_value = make_fake_tag_template()
-        datacatalog_facade.create_or_update_tag.side_effect = lambda *args: args[1]
+        datacatalog_facade.upsert_tag.side_effect = lambda *args: args[1]
 
-        created_tags = self.__tag_datasource_processor.create_tags_from_csv('file-path')
+        created_tags = self.__tag_datasource_processor.upsert_tags_from_csv('file-path')
 
-        datacatalog_facade.create_or_update_tag.assert_called_once()
+        datacatalog_facade.upsert_tag.assert_called_once()
         datacatalog_facade.delete_tag.assert_not_called()
 
         self.assertEqual(1, len(created_tags))
@@ -59,9 +59,9 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         datacatalog_facade = self.__datacatalog_facade
         datacatalog_facade.lookup_entry.return_value = make_fake_entry()
         datacatalog_facade.get_tag_template.return_value = make_fake_tag_template()
-        datacatalog_facade.create_or_update_tag.side_effect = lambda *args: args[1]
+        datacatalog_facade.upsert_tag.side_effect = lambda *args: args[1]
 
-        created_tags = self.__tag_datasource_processor.create_tags_from_csv('file-path')
+        created_tags = self.__tag_datasource_processor.upsert_tags_from_csv('file-path')
         self.assertEqual(2, len(created_tags))
 
         created_tag_1 = created_tags[0]
@@ -86,9 +86,9 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         datacatalog_facade = self.__datacatalog_facade
         datacatalog_facade.lookup_entry.return_value = make_fake_entry()
         datacatalog_facade.get_tag_template.return_value = make_fake_tag_template()
-        datacatalog_facade.create_or_update_tag.side_effect = lambda *args: args[1]
+        datacatalog_facade.upsert_tag.side_effect = lambda *args: args[1]
 
-        created_tags = self.__tag_datasource_processor.create_tags_from_csv('file-path')
+        created_tags = self.__tag_datasource_processor.upsert_tags_from_csv('file-path')
         self.assertEqual(1, len(created_tags))
 
         created_tag = created_tags[0]
@@ -108,9 +108,9 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         datacatalog_facade = self.__datacatalog_facade
         datacatalog_facade.lookup_entry.return_value = make_fake_entry()
         datacatalog_facade.get_tag_template.return_value = make_fake_tag_template()
-        datacatalog_facade.create_or_update_tag.side_effect = lambda *args: args[1]
+        datacatalog_facade.upsert_tag.side_effect = lambda *args: args[1]
 
-        created_tags = self.__tag_datasource_processor.create_tags_from_csv('file-path')
+        created_tags = self.__tag_datasource_processor.upsert_tags_from_csv('file-path')
         self.assertEqual(2, len(created_tags))
 
         created_tag_1 = created_tags[0]  # Tags with no column information are created first.
@@ -138,9 +138,9 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         datacatalog_facade.lookup_entry.side_effect = \
             (exceptions.PermissionDenied(message=''), make_fake_entry())
         datacatalog_facade.get_tag_template.return_value = make_fake_tag_template()
-        datacatalog_facade.create_or_update_tag.side_effect = lambda *args: args[1]
+        datacatalog_facade.upsert_tag.side_effect = lambda *args: args[1]
 
-        created_tags = self.__tag_datasource_processor.create_tags_from_csv('file-path')
+        created_tags = self.__tag_datasource_processor.upsert_tags_from_csv('file-path')
         self.assertEqual(1, len(created_tags))
 
         created_tag = created_tags[0]
@@ -162,9 +162,9 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         datacatalog_facade.lookup_entry.return_value = make_fake_entry()
         datacatalog_facade.get_tag_template.side_effect = \
             (exceptions.PermissionDenied(message=''), make_fake_tag_template())
-        datacatalog_facade.create_or_update_tag.side_effect = lambda *args: args[1]
+        datacatalog_facade.upsert_tag.side_effect = lambda *args: args[1]
 
-        created_tags = self.__tag_datasource_processor.create_tags_from_csv('file-path')
+        created_tags = self.__tag_datasource_processor.upsert_tags_from_csv('file-path')
         self.assertEqual(1, len(created_tags))
 
         created_tag = created_tags[0]
@@ -186,7 +186,7 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         deleted_tag_names = self.__tag_datasource_processor.delete_tags_from_csv('file-path')
 
         datacatalog_facade.delete_tag.assert_called_once()
-        datacatalog_facade.create_or_update_tag.assert_not_called()
+        datacatalog_facade.upsert_tag.assert_not_called()
 
         self.assertEqual(1, len(deleted_tag_names))
 

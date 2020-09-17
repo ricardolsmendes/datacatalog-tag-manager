@@ -1,5 +1,6 @@
 from datetime import datetime
 import logging
+from typing import Dict
 
 from google.cloud.datacatalog import enums, types
 
@@ -8,7 +9,11 @@ class DataCatalogEntityFactory:
     __TRUTHS = {1, '1', 't', 'T', 'true', 'True', 'TRUE'}
 
     @classmethod
-    def make_tag(cls, tag_template, fields_dict, column=None):
+    def make_tag(cls,
+                 tag_template: types.TagTemplate,
+                 fields_dict: Dict[str, object],
+                 column: str = None) -> types.Tag():
+
         tag = types.Tag()
 
         tag.template = tag_template.name
@@ -21,14 +26,14 @@ class DataCatalogEntityFactory:
 
     @classmethod
     def __set_tag_fields(cls, tag, tag_template, fields_dict):
-        valid_fields_dict = cls.get_valid_tag_fields_dict(tag_template, fields_dict)
+        valid_fields_dict = cls.__get_valid_tag_fields_dict(tag_template, fields_dict)
         for field_id, field_value in valid_fields_dict.items():
             field = tag.fields[field_id]
             field_type = tag_template.fields[field_id].type
             cls.__set_field_value(field, field_type, field_value)
 
     @classmethod
-    def get_valid_tag_fields_dict(cls, tag_template, fields_dict):
+    def __get_valid_tag_fields_dict(cls, tag_template, fields_dict):
         valid_fields_dict = {}
 
         if not fields_dict:

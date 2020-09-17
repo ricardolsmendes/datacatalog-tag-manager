@@ -21,7 +21,7 @@ class DataCatalogFacadeTest(unittest.TestCase):
         datacatalog = self.__datacatalog_client
         datacatalog.list_tags.return_value = []
 
-        self.__datacatalog_facade.create_or_update_tag('entry_name', make_fake_tag())
+        self.__datacatalog_facade.upsert_tag('entry_name', make_fake_tag())
 
         datacatalog.list_tags.assert_called_once()
         datacatalog.create_tag.assert_called_once()
@@ -35,7 +35,7 @@ class DataCatalogFacadeTest(unittest.TestCase):
         datacatalog = self.__datacatalog_client
         datacatalog.list_tags.return_value = [tag_1]
 
-        self.__datacatalog_facade.create_or_update_tag('entry_name', tag_2)
+        self.__datacatalog_facade.upsert_tag('entry_name', tag_2)
 
         datacatalog.list_tags.assert_called_once()
         datacatalog.update_tag.assert_called_once()
