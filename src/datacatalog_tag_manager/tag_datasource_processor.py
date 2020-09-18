@@ -161,11 +161,11 @@ class TagDatasourceProcessor:
     def __convert_fields_dataframe_to_dict(cls, dataframe):
         # Remove the rows with no field id since they're not valid from this point
         dataframe.dropna(subset=[constant.TAGS_DS_FIELD_ID_COLUMN_LABEL], inplace=True)
-        base_dict = dataframe.to_dict(orient='records')
+        records = dataframe.to_dict(orient='records')
 
         id_to_value_map = {}
-        for base_object in base_dict:
-            id_to_value_map[base_object[constant.TAGS_DS_FIELD_ID_COLUMN_LABEL]] =\
-                base_object[constant.TAGS_DS_FIELD_VALUE_COLUMN_LABEL]
+        for record in records:
+            id_to_value_map[record[constant.TAGS_DS_FIELD_ID_COLUMN_LABEL]] =\
+                record[constant.TAGS_DS_FIELD_VALUE_COLUMN_LABEL]
 
         return id_to_value_map
