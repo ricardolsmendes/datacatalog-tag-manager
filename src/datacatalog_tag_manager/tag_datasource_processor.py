@@ -77,7 +77,6 @@ class TagDatasourceProcessor:
 
             templates_subset = \
                 normalized_df.loc[[linked_resource], constant.TAGS_DS_TEMPLATE_NAME_COLUMN_LABEL:]
-            templates_subset.set_index(constant.TAGS_DS_TEMPLATE_NAME_COLUMN_LABEL, inplace=True)
 
             # Save memory by deleting data already copied to a subset.
             normalized_df.drop(linked_resource, inplace=True)
@@ -103,6 +102,8 @@ class TagDatasourceProcessor:
         return rebuilt_df
 
     def __make_tags_from_templates_dataframe(self, dataframe):
+        dataframe.set_index(constant.TAGS_DS_TEMPLATE_NAME_COLUMN_LABEL, inplace=True)
+
         tags = []
         for template_name in dataframe.index.unique().tolist():
             try:
@@ -132,17 +133,15 @@ class TagDatasourceProcessor:
                     self.__make_tag_from_fields_dataframe(tag_template, null_columns_subset))
 
             # (2) Make Tags to be attached/deleted to/from the resource's columns
-
-            columns_subset.set_index(constant.TAGS_DS_SCHEMA_COLUMN_COLUMN_LABEL, inplace=True)
-
             tags.extend(self.__make_tags_from_columns_dataframe(tag_template, columns_subset))
 
         return tags
 
     @classmethod
     def __make_tags_from_columns_dataframe(cls, tag_template, dataframe):
-        tags = []
+        dataframe.set_index(constant.TAGS_DS_SCHEMA_COLUMN_COLUMN_LABEL, inplace=True)
 
+        tags = []
         # NaN not expected among index values at this point.
         for column_name in dataframe.index.unique().tolist():
             column_subset = dataframe.loc[[column_name], constant.TAGS_DS_FIELD_ID_COLUMN_LABEL:]
