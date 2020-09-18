@@ -18,24 +18,24 @@ class TagDatasourceProcessor:
         Upsert Tags by reading information from a CSV file.
 
         :param file_path: The CSV file path.
-        :return: A list with all Tags created.
+        :return: A list with all upserted Tags.
         """
         logging.info('')
-        logging.info('===> Create Tags from CSV [STARTED]')
+        logging.info('===> Upsert Tags from CSV [STARTED]')
 
         logging.info('')
         logging.info('Reading CSV file: %s...', file_path)
         dataframe = pd.read_csv(file_path)
 
         logging.info('')
-        logging.info('Creating the Tags...')
-        created_tags = self.__process_tags_from_dataframe(
+        logging.info('Upserting the Tags...')
+        upserted_tags = self.__process_tags_from_dataframe(
             dataframe, processor=self.__datacatalog_facade.upsert_tag)
 
         logging.info('')
-        logging.info('==== Create Tags from CSV [FINISHED] =============')
+        logging.info('==== Upsert Tags from CSV [FINISHED] =============')
 
-        return created_tags
+        return upserted_tags
 
     def delete_tags_from_csv(self, file_path: str) -> List[str]:
         """
@@ -110,7 +110,7 @@ class TagDatasourceProcessor:
             except exceptions.PermissionDenied:
                 logging.warning(
                     'Permission denied when getting Tag Template %s.'
-                    ' Unable to create Tags using it.', template_name)
+                    ' Unable to manage Tags using it.', template_name)
                 continue
 
             columns_subset = \
