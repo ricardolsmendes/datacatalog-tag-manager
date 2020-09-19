@@ -98,7 +98,11 @@ export GOOGLE_APPLICATION_CREDENTIALS=./credentials/datacatalog-tag-manager.json
 
 ### 2.1. Create or Update
 
-The metadata schema to create or update Tags is described below. Use as many lines as needed to
+#### 2.1.1. From a CSV file 
+
+- *SCHEMA*
+
+The metadata schema to create or update Tags is presented below. Use as many lines as needed to
 describe all the Tags and Fields you need.
 
 | Column              | Description                                           | Mandatory |
@@ -109,19 +113,20 @@ describe all the Tags and Fields you need.
 | **field_id**        | Id of the Tag field                                   |    yes    |
 | **field_value**     | Value of the Tag field                                |    yes    |
 
-*TIPS* 
-- [sample-input/upsert-tags][4] for reference;
-- [Data Catalog Sample Tags][6] (Google Sheets) might help to create/export a CSV file.
+- *SAMPLE INPUT* 
 
-#### 2.1.1. From a CSV file 
+1. [sample-input/upsert-tags][4] for reference;
+1. [Data Catalog Sample Tags][6] (Google Sheets) might help to create/export a CSV file.
 
-- Python + virtualenv
+- *COMMANDS* 
+
+**Python + virtualenv**
 
 ```bash
 datacatalog-tags upsert --csv-file CSV_FILE_PATH
 ```
 
-- Docker
+**Docker**
 
 ```bash
 docker build --rm --tag datacatalog-tag-manager .
@@ -132,7 +137,11 @@ docker run --rm --tty \
 
 ### 2.2. Delete
 
-The metadata schema to delete Tags is described below. Use as many lines as needed to delete all
+#### 2.2.1. From a CSV file 
+
+- *SCHEMA*
+
+The metadata schema to delete Tags is presented below. Use as many lines as needed to delete all
 the Tags you want.
 
 | Column              | Description                                             | Mandatory |
@@ -141,19 +150,20 @@ the Tags you want.
 | **template_name**   | Resource name of the Tag Template of the Tag            |    yes    |
 | **column**          | Delete Tags from a column belonging to the Entry schema |     no    |
 
-*TIPS* 
-- [sample-input/delete-tags][5] for reference;
-- [Data Catalog Sample Tags][6] (Google Sheets) might help to create/export a CSV file.
+- *SAMPLE INPUT* 
 
-#### 2.2.1. From a CSV file 
+1. [sample-input/delete-tags][5] for reference;
+1. [Data Catalog Sample Tags][6] (Google Sheets) might help to create/export a CSV file.
 
-- Python + virtualenv
+- *COMMANDS* 
+
+**Python + virtualenv**
 
 ```bash
 datacatalog-tags delete --csv-file CSV_FILE_PATH
 ```
 
-- Docker
+**Docker**
 
 ```bash
 docker build --rm --tag datacatalog-tag-manager .
