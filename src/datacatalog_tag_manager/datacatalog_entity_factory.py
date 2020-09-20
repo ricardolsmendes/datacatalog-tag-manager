@@ -12,7 +12,7 @@ class DataCatalogEntityFactory:
     def make_tag(cls,
                  tag_template: types.TagTemplate,
                  fields_dict: Dict[str, object],
-                 column: str = None) -> types.Tag():
+                 column: str = None) -> types.Tag:
 
         tag = types.Tag()
 
