@@ -2,7 +2,7 @@ import logging
 from typing import List
 
 from google.api_core import exceptions
-from google.cloud.datacatalog import types
+from google.cloud.datacatalog import Tag
 import pandas as pd
 
 from . import constant, datacatalog_entity_factory, datacatalog_facade
@@ -13,7 +13,7 @@ class TagDatasourceProcessor:
     def __init__(self):
         self.__datacatalog_facade = datacatalog_facade.DataCatalogFacade()
 
-    def upsert_tags_from_csv(self, file_path: str) -> List[types.Tag]:
+    def upsert_tags_from_csv(self, file_path: str) -> List[Tag]:
         """
         Upsert Tags by reading information from a CSV file.
 

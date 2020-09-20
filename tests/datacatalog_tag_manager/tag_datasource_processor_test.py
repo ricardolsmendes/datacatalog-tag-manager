@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 
 from google.api_core import exceptions
-from google.cloud.datacatalog import enums, types
+from google.cloud.datacatalog import Entry, FieldType, TagTemplate, TagTemplateField
 import pandas as pd
 
 import datacatalog_tag_manager
@@ -22,7 +22,7 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertIsNotNone(self.__tag_datasource_processor.
                              __dict__['_TagDatasourceProcessor__datacatalog_facade'])
 
-    def test_create_tags_from_csv_should_succeed(self, mock_read_csv):
+    def test_upsert_tags_from_csv_should_succeed(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(
             data={
                 'linked_resource': ['//resource-link'],
@@ -47,7 +47,7 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertEqual('test_template', created_tag.template)
         self.assertEqual('Test value', created_tag.fields['string_field'].string_value)
 
-    def test_create_tags_from_csv_missing_values_should_succeed(self, mock_read_csv):
+    def test_upsert_tags_from_csv_missing_values_should_succeed(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(
             data={
                 'linked_resource': ['//resource-link-1', None, '//resource-link-2', None],
@@ -74,7 +74,7 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertFalse(created_tag_2.fields['bool_field'].bool_value)
         self.assertEqual('Test value 2', created_tag_2.fields['string_field'].string_value)
 
-    def test_create_tags_from_csv_unordered_columns_should_succeed(self, mock_read_csv):
+    def test_upsert_tags_from_csv_unordered_columns_should_succeed(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(
             data={
                 'field_id': ['string_field'],
@@ -95,7 +95,7 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertEqual('test_template', created_tag.template)
         self.assertEqual('Test value', created_tag.fields['string_field'].string_value)
 
-    def test_create_tags_from_csv_column_metadata_should_succeed(self, mock_read_csv):
+    def test_upsert_tags_from_csv_column_metadata_should_succeed(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(
             data={
                 'linked_resource': ['//resource-link', '//resource-link'],
@@ -123,7 +123,7 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertTrue(created_tag_2.fields['bool_field'].bool_value)
         self.assertFalse('string_field' in created_tag_2.fields)
 
-    def test_create_tags_from_csv_permission_denied_lookup_entry_should_skip_resource(
+    def test_upsert_tags_from_csv_permission_denied_lookup_entry_should_skip_resource(
             self, mock_read_csv):
 
         mock_read_csv.return_value = pd.DataFrame(
@@ -147,7 +147,7 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertEqual('test_template', created_tag.template)
         self.assertEqual('Test value', created_tag.fields['string_field'].string_value)
 
-    def test_create_tags_from_csv_permission_denied_get_template_should_skip_template(
+    def test_upsert_tags_from_csv_permission_denied_get_template_should_skip_template(
             self, mock_read_csv):
 
         mock_read_csv.return_value = pd.DataFrame(
@@ -195,16 +195,25 @@ class TagDatasourceProcessorTest(unittest.TestCase):
 
 
 def make_fake_entry():
-    entry = types.Entry()
+    entry = Entry()
     entry.name = 'test_entry'
 
     return entry
 
 
 def make_fake_tag_template():
-    tag_template = types.TagTemplate()
+    tag_template = TagTemplate()
     tag_template.name = 'test_template'
-    tag_template.fields['bool_field'].type.primitive_type = enums.FieldType.PrimitiveType.BOOL
-    tag_template.fields['string_field'].type.primitive_type = enums.FieldType.PrimitiveType.STRING
+    tag_template.fields['bool_field'] = \
+        make_primitive_type_template_field(FieldType.PrimitiveType.BOOL)
+    tag_template.fields['string_field'] = \
+        make_primitive_type_template_field(FieldType.PrimitiveType.STRING)
 
     return tag_template
+
+
+def make_primitive_type_template_field(primitive_type: FieldType.PrimitiveType):
+    field = TagTemplateField()
+    field.type.primitive_type = primitive_type
+
+    return field

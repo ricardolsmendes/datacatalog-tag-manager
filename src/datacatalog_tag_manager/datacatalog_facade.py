@@ -2,7 +2,7 @@ import logging
 from functools import lru_cache
 
 from google.cloud import datacatalog
-from google.cloud.datacatalog import types
+from google.cloud.datacatalog import Entry, LookupEntryRequest, Tag, TagTemplate
 
 
 class DataCatalogFacade:
@@ -14,7 +14,7 @@ class DataCatalogFacade:
         # Initialize the API client.
         self.__datacatalog = datacatalog.DataCatalogClient()
 
-    def delete_tag(self, parent_entry_name: str, tag: types.Tag) -> str:
+    def delete_tag(self, parent_entry_name: str, tag: Tag) -> str:
         entry_tags = self.__datacatalog.list_tags(parent=parent_entry_name)
 
         try:
@@ -29,7 +29,7 @@ class DataCatalogFacade:
             logging.error('Tag not found for Tag Template: %s'
                           ' / Column: %s', tag.template, tag.column)
 
-    def upsert_tag(self, parent_entry_name: str, tag: types.Tag) -> types.Tag:
+    def upsert_tag(self, parent_entry_name: str, tag: Tag) -> Tag:
         entry_tags = self.__datacatalog.list_tags(parent=parent_entry_name)
 
         try:
@@ -47,16 +47,18 @@ class DataCatalogFacade:
             return created_tag
 
     @lru_cache(maxsize=16)
-    def get_tag_template(self, name: str) -> types.TagTemplate:
+    def get_tag_template(self, name: str) -> TagTemplate:
         self.__log_operation_start('GET Tag Template: %s', name)
         tag_template = self.__datacatalog.get_tag_template(name=name)
         self.__log_single_object_read_result(tag_template)
         return tag_template
 
     @lru_cache(maxsize=64)
-    def lookup_entry(self, linked_resource: str) -> types.Entry:
+    def lookup_entry(self, linked_resource: str) -> Entry:
         self.__log_operation_start('LOOKUP Entry: %s', linked_resource)
-        entry = self.__datacatalog.lookup_entry(linked_resource=linked_resource)
+        lookup_request = LookupEntryRequest()
+        lookup_request.linked_resource = linked_resource
+        entry = self.__datacatalog.lookup_entry(request=lookup_request)
         self.__log_single_object_read_result(entry)
         return entry
 

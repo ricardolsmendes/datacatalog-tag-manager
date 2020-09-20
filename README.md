@@ -70,6 +70,7 @@ Docker may be used as an alternative to run `datacatalog-tag-manager`. In this c
 disregard the [above](#11-python--virtualenv) _virtualenv_ setup instructions.
 
 #### 1.2.1. Get the source code
+
 ```bash
 git clone https://github.com/ricardolsmendes/datacatalog-tag-manager
 cd ./datacatalog-tag-manager
@@ -123,7 +124,7 @@ describe all the Tags and Fields you need.
 **Python + virtualenv**
 
 ```bash
-datacatalog-tags upsert --csv-file CSV_FILE_PATH
+datacatalog-tags upsert --csv-file <CSV-FILE-PATH>
 ```
 
 **Docker**
@@ -131,8 +132,8 @@ datacatalog-tags upsert --csv-file CSV_FILE_PATH
 ```bash
 docker build --rm --tag datacatalog-tag-manager .
 docker run --rm --tty \
-  --volume CREDENTIALS_FILE_FOLDER:/credentials --volume CSV_FILE_FOLDER:/data \
-  datacatalog-tag-manager upsert --csv-file /data/CSV_FILE_NAME
+  --volume <CREDENTIALS-FILE-FOLDER>:/credentials --volume <CSV-FILE-FOLDER>:/data \
+  datacatalog-tag-manager upsert --csv-file /data/<CSV-FILE-PATH>
 ```
 
 ### 2.2. Delete
@@ -160,7 +161,7 @@ the Tags you want.
 **Python + virtualenv**
 
 ```bash
-datacatalog-tags delete --csv-file CSV_FILE_PATH
+datacatalog-tags delete --csv-file <CSV-FILE-PATH>
 ```
 
 **Docker**
@@ -168,8 +169,8 @@ datacatalog-tags delete --csv-file CSV_FILE_PATH
 ```bash
 docker build --rm --tag datacatalog-tag-manager .
 docker run --rm --tty \
-  --volume CREDENTIALS_FILE_FOLDER:/credentials --volume CSV_FILE_FOLDER:/data \
-  datacatalog-tag-manager delete --csv-file /data/CSV_FILE_NAME
+  --volume <CREDENTIALS-FILE-FOLDER>:/credentials --volume <CSV-FILE-FOLDER>:/data \
+  datacatalog-tag-manager delete --csv-file /data/<CSV-FILE-PATH>
 ```
 
 [1]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager.svg?style=svg
