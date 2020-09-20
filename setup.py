@@ -19,7 +19,7 @@ setuptools.setup(
     },
     include_package_data=True,
     install_requires=(
-        'google-cloud-datacatalog>=1,<2',
+        'google-cloud-datacatalog',
         'pandas',
     ),
     setup_requires=('pytest-runner', ),

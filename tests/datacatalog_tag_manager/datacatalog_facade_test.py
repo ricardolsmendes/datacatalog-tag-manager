@@ -1,7 +1,8 @@
 import unittest
 from unittest import mock
 
-from google.cloud.datacatalog import types
+from google.cloud.datacatalog import Tag, TagField
+from google.protobuf.timestamp_pb2 import Timestamp
 
 from datacatalog_tag_manager import datacatalog_facade
 
@@ -17,7 +18,7 @@ class DataCatalogFacadeTest(unittest.TestCase):
     def test_constructor_should_set_instance_attributes(self):
         self.assertIsNotNone(self.__datacatalog_facade.__dict__['_DataCatalogFacade__datacatalog'])
 
-    def test_create_or_update_tag_nonexistent_should_create(self):
+    def test_upsert_tag_nonexistent_should_create(self):
         datacatalog = self.__datacatalog_client
         datacatalog.list_tags.return_value = []
 
@@ -26,7 +27,7 @@ class DataCatalogFacadeTest(unittest.TestCase):
         datacatalog.list_tags.assert_called_once()
         datacatalog.create_tag.assert_called_once()
 
-    def test_create_or_update_tag_pre_existing_should_update(self):
+    def test_upsert_tag_pre_existing_should_update(self):
         tag_1 = make_fake_tag()
 
         tag_2 = make_fake_tag()
@@ -70,7 +71,7 @@ class DataCatalogFacadeTest(unittest.TestCase):
         datacatalog.delete_tag.assert_not_called()
 
     def test_get_tag_template_should_call_client_library_method(self):
-        self.__datacatalog_facade.get_tag_template(None)
+        self.__datacatalog_facade.get_tag_template('')
 
         datacatalog = self.__datacatalog_client
         datacatalog.get_tag_template.assert_called_once()
@@ -83,12 +84,29 @@ class DataCatalogFacadeTest(unittest.TestCase):
 
 
 def make_fake_tag():
-    tag = types.Tag()
+    tag = Tag()
     tag.template = 'test_template'
-    tag.fields['test_bool_field'].bool_value = True
-    tag.fields['test_double_field'].double_value = 1
-    tag.fields['test_string_field'].string_value = 'Test String Value'
-    tag.fields['test_timestamp_field'].timestamp_value.FromJsonString('2019-10-15T01:00:00-03:00')
-    tag.fields['test_enum_field'].enum_value.display_name = 'Test ENUM Value'
+
+    bool_field = TagField()
+    bool_field.bool_value = True
+    tag.fields['test_bool_field'] = bool_field
+
+    double_field = TagField()
+    double_field.double_value = 1
+    tag.fields['test_double_field'] = double_field
+
+    string_field = TagField()
+    string_field.string_value = 'Test String Value'
+    tag.fields['test_string_field'] = string_field
+
+    timestamp = Timestamp()
+    timestamp.FromJsonString('2019-10-15T01:00:00-03:00')
+    timestamp_field = TagField()
+    timestamp_field.timestamp_value = timestamp
+    tag.fields['test_timestamp_field'] = timestamp_field
+
+    enum_field = TagField()
+    enum_field.enum_value.display_name = 'Test ENUM Value'
+    tag.fields['test_enum_field'] = enum_field
 
     return tag
