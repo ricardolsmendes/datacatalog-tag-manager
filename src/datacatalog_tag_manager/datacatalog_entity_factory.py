@@ -83,7 +83,7 @@ class DataCatalogEntityFactory:
     def __set_double_field_value(cls, field, value):
         """
         :param field: The field.
-        :param value: A number of number-like string value.
+        :param value: A number or number-like string value.
         """
         field.double_value = value if isinstance(value, (int, float, complex)) else float(value)
 
@@ -107,7 +107,7 @@ class DataCatalogEntityFactory:
     def __set_timestamp_field_value(cls, field, value):
         """
         :param field: The field.
-        :param value: A datetime of datetime-like string value.
+        :param value: A datetime or datetime-like string value.
         """
         dt = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S%z') if isinstance(value, str) else value
         field.timestamp_value.FromDatetime(dt)
