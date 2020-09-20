@@ -83,27 +83,43 @@ jobs:
             twine upload dist/*
 
 workflows:
-  test-and-release:
+  continuous-integration:
     jobs:
       - set-up:
           filters:
             tags:
-              only: /.*/
+              ignore: /.*/
       - test:
           requires:
             - set-up
           filters:
             tags:
-              only: /.*/
+              ignore: /.*/
       - lint:
           requires:
             - test
           filters:
             tags:
-              only: /.*/
+              ignore: /.*/
+  continuous-delivery:
+    jobs:
+      - set-up:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v[0-9]+(\.[0-9]+)*$/
+      - test:
+          requires:
+            - set-up
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v[0-9]+(\.[0-9]+)*$/
       - release:
           requires:
-            - lint
+            - test
           filters:
             branches:
               ignore: /.*/
