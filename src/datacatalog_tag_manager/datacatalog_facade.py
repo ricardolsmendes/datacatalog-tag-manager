@@ -2,7 +2,7 @@ import logging
 from functools import lru_cache
 
 from google.cloud import datacatalog
-from google.cloud.datacatalog import Entry, LookupEntryRequest, Tag, TagTemplate
+from google.cloud.datacatalog import Entry, Tag, TagTemplate
 
 
 class DataCatalogFacade:
@@ -56,7 +56,7 @@ class DataCatalogFacade:
     @lru_cache(maxsize=64)
     def lookup_entry(self, linked_resource: str) -> Entry:
         self.__log_operation_start('LOOKUP Entry: %s', linked_resource)
-        lookup_request = LookupEntryRequest()
+        lookup_request = datacatalog.LookupEntryRequest()
         lookup_request.linked_resource = linked_resource
         entry = self.__datacatalog.lookup_entry(request=lookup_request)
         self.__log_single_object_read_result(entry)
