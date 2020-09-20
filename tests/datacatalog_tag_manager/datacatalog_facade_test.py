@@ -17,7 +17,7 @@ class DataCatalogFacadeTest(unittest.TestCase):
     def test_constructor_should_set_instance_attributes(self):
         self.assertIsNotNone(self.__datacatalog_facade.__dict__['_DataCatalogFacade__datacatalog'])
 
-    def test_create_or_update_tag_nonexistent_should_create(self):
+    def test_upsert_tag_nonexistent_should_create(self):
         datacatalog = self.__datacatalog_client
         datacatalog.list_tags.return_value = []
 
@@ -26,7 +26,7 @@ class DataCatalogFacadeTest(unittest.TestCase):
         datacatalog.list_tags.assert_called_once()
         datacatalog.create_tag.assert_called_once()
 
-    def test_create_or_update_tag_pre_existing_should_update(self):
+    def test_upsert_tag_pre_existing_should_update(self):
         tag_1 = make_fake_tag()
 
         tag_2 = make_fake_tag()
@@ -70,7 +70,7 @@ class DataCatalogFacadeTest(unittest.TestCase):
         datacatalog.delete_tag.assert_not_called()
 
     def test_get_tag_template_should_call_client_library_method(self):
-        self.__datacatalog_facade.get_tag_template(None)
+        self.__datacatalog_facade.get_tag_template('')
 
         datacatalog = self.__datacatalog_client
         datacatalog.get_tag_template.assert_called_once()
