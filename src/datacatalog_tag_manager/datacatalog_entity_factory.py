@@ -3,6 +3,7 @@ import logging
 from typing import Dict
 
 from google.cloud import datacatalog
+from google.cloud.datacatalog import Tag, TagTemplate
 from google.protobuf import timestamp_pb2
 
 
@@ -11,9 +12,9 @@ class DataCatalogEntityFactory:
 
     @classmethod
     def make_tag(cls,
-                 tag_template: datacatalog.TagTemplate,
+                 tag_template: TagTemplate,
                  fields_dict: Dict[str, object],
-                 column: str = None) -> datacatalog.Tag:
+                 column: str = None) -> Tag:
 
         tag = datacatalog.Tag()
 
