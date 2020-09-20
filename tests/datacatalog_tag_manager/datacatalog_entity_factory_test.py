@@ -2,19 +2,20 @@ from datetime import datetime
 import unittest
 from typing import List
 
-from google.cloud.datacatalog import FieldType, TagTemplate, TagTemplateField
+from google.cloud import datacatalog
+from google.cloud.datacatalog import FieldType
 
 from datacatalog_tag_manager import datacatalog_entity_factory
 
 
 class DataCatalogEntityFactoryTest(unittest.TestCase):
-    __BOOL_TYPE = FieldType.PrimitiveType.BOOL
-    __DOUBLE_TYPE = FieldType.PrimitiveType.DOUBLE
-    __STRING_TYPE = FieldType.PrimitiveType.STRING
-    __TIMESTAMP_TYPE = FieldType.PrimitiveType.TIMESTAMP
+    __BOOL_TYPE = datacatalog.FieldType.PrimitiveType.BOOL
+    __DOUBLE_TYPE = datacatalog.FieldType.PrimitiveType.DOUBLE
+    __STRING_TYPE = datacatalog.FieldType.PrimitiveType.STRING
+    __TIMESTAMP_TYPE = datacatalog.FieldType.PrimitiveType.TIMESTAMP
 
     def test_make_tag_should_set_column(self):
-        tag_template = TagTemplate()
+        tag_template = datacatalog.TagTemplate()
         tag_template.name = 'test_template'
 
         tag = datacatalog_entity_factory.DataCatalogEntityFactory.make_tag(
@@ -23,7 +24,7 @@ class DataCatalogEntityFactoryTest(unittest.TestCase):
         self.assertEqual('test_column', tag.column)
 
     def test_make_tag_valid_boolean_values_should_set_fields(self):
-        tag_template = TagTemplate()
+        tag_template = datacatalog.TagTemplate()
         tag_template.name = 'test_template'
         tag_template.fields['test_bool_field'] = \
             make_primitive_type_template_field(self.__BOOL_TYPE)
@@ -46,7 +47,7 @@ class DataCatalogEntityFactoryTest(unittest.TestCase):
         self.assertTrue(tag.fields['test_bool_field_str'].bool_value)
 
     def test_make_tag_valid_double_values_should_set_fields(self):
-        tag_template = TagTemplate()
+        tag_template = datacatalog.TagTemplate()
         tag_template.name = 'test_template'
         tag_template.fields['test_double_field'] = \
             make_primitive_type_template_field(self.__DOUBLE_TYPE)
@@ -62,7 +63,7 @@ class DataCatalogEntityFactoryTest(unittest.TestCase):
         self.assertEqual(3.1415, tag.fields['test_double_field_str'].double_value)
 
     def test_make_tag_valid_string_value_should_set_field(self):
-        tag_template = TagTemplate()
+        tag_template = datacatalog.TagTemplate()
         tag_template.name = 'test_template'
         tag_template.fields['test_string_field'] = \
             make_primitive_type_template_field(self.__STRING_TYPE)
@@ -75,7 +76,7 @@ class DataCatalogEntityFactoryTest(unittest.TestCase):
         self.assertEqual('Test String Value', tag.fields['test_string_field'].string_value)
 
     def test_make_tag_valid_timestamp_values_should_set_fields(self):
-        tag_template = TagTemplate()
+        tag_template = datacatalog.TagTemplate()
         tag_template.name = 'test_template'
         tag_template.fields['test_timestamp_field'] = \
             make_primitive_type_template_field(self.__TIMESTAMP_TYPE)
@@ -98,7 +99,7 @@ class DataCatalogEntityFactoryTest(unittest.TestCase):
                          tag.fields['test_timestamp_field_str'].timestamp_value.timestamp())
 
     def test_make_tag_valid_enum_value_should_set_field(self):
-        tag_template = TagTemplate()
+        tag_template = datacatalog.TagTemplate()
         tag_template.name = 'test_template'
         tag_template.fields['test_enum_field'] = make_enum_type_template_field(['VALUE_1'])
 
@@ -110,7 +111,7 @@ class DataCatalogEntityFactoryTest(unittest.TestCase):
         self.assertEqual('VALUE_1', tag.fields['test_enum_field'].enum_value.display_name)
 
     def test_make_tag_should_ignore_invalid_field(self):
-        tag_template = TagTemplate()
+        tag_template = datacatalog.TagTemplate()
         tag_template.name = 'test_template'
         tag_template.fields['test_bool_field'] = \
             make_primitive_type_template_field(self.__BOOL_TYPE)
@@ -125,16 +126,16 @@ class DataCatalogEntityFactoryTest(unittest.TestCase):
 
 
 def make_primitive_type_template_field(primitive_type: FieldType.PrimitiveType):
-    field = TagTemplateField()
+    field = datacatalog.TagTemplateField()
     field.type.primitive_type = primitive_type
 
     return field
 
 
 def make_enum_type_template_field(values: List[str]):
-    field = TagTemplateField()
+    field = datacatalog.TagTemplateField()
     for value in values:
-        enum_value = FieldType.EnumType.EnumValue()
+        enum_value = datacatalog.FieldType.EnumType.EnumValue()
         enum_value.display_name = value
         field.type.enum_type.allowed_values.append(enum_value)
 

@@ -2,7 +2,8 @@ import unittest
 from unittest import mock
 
 from google.api_core import exceptions
-from google.cloud.datacatalog import Entry, FieldType, TagTemplate, TagTemplateField
+from google.cloud import datacatalog
+from google.cloud.datacatalog import FieldType
 import pandas as pd
 
 import datacatalog_tag_manager
@@ -195,25 +196,25 @@ class TagDatasourceProcessorTest(unittest.TestCase):
 
 
 def make_fake_entry():
-    entry = Entry()
+    entry = datacatalog.Entry()
     entry.name = 'test_entry'
 
     return entry
 
 
 def make_fake_tag_template():
-    tag_template = TagTemplate()
+    tag_template = datacatalog.TagTemplate()
     tag_template.name = 'test_template'
     tag_template.fields['bool_field'] = \
-        make_primitive_type_template_field(FieldType.PrimitiveType.BOOL)
+        make_primitive_type_template_field(datacatalog.FieldType.PrimitiveType.BOOL)
     tag_template.fields['string_field'] = \
-        make_primitive_type_template_field(FieldType.PrimitiveType.STRING)
+        make_primitive_type_template_field(datacatalog.FieldType.PrimitiveType.STRING)
 
     return tag_template
 
 
 def make_primitive_type_template_field(primitive_type: FieldType.PrimitiveType):
-    field = TagTemplateField()
+    field = datacatalog.TagTemplateField()
     field.type.primitive_type = primitive_type
 
     return field
