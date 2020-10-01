@@ -1,4 +1,4 @@
-column,linked_resource,template_name
-,//bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID,projects/PROJECT_ID/locations/us-central1/tagTemplates/TEMPLATE_ID
-,//bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID/tables/TABLE_ID,projects/PROJECT_ID/locations/us-central1/tagTemplates/TEMPLATE_ID
-id,//bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID/tables/TABLE_ID,projects/PROJECT_ID/locations/us-central1/tagTemplates/TEMPLATE_ID
+column,linked_resource,template_name,
+,//bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID,projects/PROJECT_ID/locations/us-central1/tagTemplates/TEMPLATE_ID,
+,//bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID/tables/TABLE_ID,projects/PROJECT_ID/locations/us-central1/tagTemplates/TEMPLATE_ID,
+id,//bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID/tables/TABLE_ID,projects/PROJECT_ID/locations/us-central1/tagTemplates/TEMPLATE_ID,

@@ -1,4 +1,5 @@
 import logging
+import math
 from typing import List
 
 from google.api_core import exceptions
@@ -165,7 +166,10 @@ class TagDatasourceProcessor:
 
         id_to_value_map = {}
         for record in records:
-            id_to_value_map[record[constant.TAGS_DS_FIELD_ID_COLUMN_LABEL]] =\
-                record[constant.TAGS_DS_FIELD_VALUE_COLUMN_LABEL]
+            value = record[constant.TAGS_DS_FIELD_VALUE_COLUMN_LABEL]
+            if isinstance(value, float) and math.isnan(value):
+                continue
+
+            id_to_value_map[record[constant.TAGS_DS_FIELD_ID_COLUMN_LABEL]] = value
 
         return id_to_value_map
