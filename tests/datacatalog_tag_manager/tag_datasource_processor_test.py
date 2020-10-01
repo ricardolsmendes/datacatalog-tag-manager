@@ -124,6 +124,28 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertTrue(created_tag_2.fields['bool_field'].bool_value)
         self.assertFalse('string_field' in created_tag_2.fields)
 
+    def test_upsert_tags_from_csv_should_skip_nan_field_values(self, mock_read_csv):
+        # Pandas is not aware of the field types, so it reads all empty values as NaN.
+        mock_read_csv.return_value = pd.DataFrame(
+            data={
+                'linked_resource': ['//resource-link', None],
+                'template_name': ['test_template', None],
+                'field_id': ['bool_field', 'string_field'],
+                'field_value': ['true', float('NaN')]
+            })
+
+        datacatalog_facade = self.__datacatalog_facade
+        datacatalog_facade.lookup_entry.return_value = make_fake_entry()
+        datacatalog_facade.get_tag_template.return_value = make_fake_tag_template()
+        datacatalog_facade.upsert_tag.side_effect = lambda *args: args[1]
+
+        created_tags = self.__tag_datasource_processor.upsert_tags_from_csv('file-path')
+        self.assertEqual(1, len(created_tags))
+
+        created_tag = created_tags[0]
+        self.assertTrue('bool_field' in created_tag.fields)
+        self.assertFalse('string_field' in created_tag.fields)
+
     def test_upsert_tags_from_csv_permission_denied_lookup_entry_should_skip_resource(
             self, mock_read_csv):
 
