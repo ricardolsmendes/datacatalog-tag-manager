@@ -1,4 +1,4 @@
-linked_resource,template_name,column,field_id,field_value,
+entry_name OR linked_resource,template_name,column,field_id,field_value,
 //bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID,projects/PROJECT_ID/locations/us-central1/tagTemplates/TEMPLATE_ID,,boolean_field1,FALSE,
 //bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID,projects/PROJECT_ID/locations/us-central1/tagTemplates/TEMPLATE_ID,,boolean_field2,TRUE,
 //bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID,projects/PROJECT_ID/locations/us-central1/tagTemplates/TEMPLATE_ID,,double_field,2.56,

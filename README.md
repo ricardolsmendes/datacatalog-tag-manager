@@ -106,18 +106,18 @@ export GOOGLE_APPLICATION_CREDENTIALS=./credentials/datacatalog-tag-manager.json
 The metadata schema to create or update Tags is presented below. Use as many lines as needed to
 describe all the Tags and Fields you need.
 
-| Column              | Description                                           | Mandatory |
-| ------------------- | ----------------------------------------------------- | :-------: |
-| **linked_resource** | Full name of the asset the Entry refers to            |    yes    |
-| **template_name**   | Resource name of the Tag Template for the Tag         |    yes    |
-| **column**          | Attach Tags to a column belonging to the Entry schema |     no    |
-| **field_id**        | Id of the Tag field                                   |    yes    |
-| **field_value**     | Value of the Tag field                                |    yes    |
+| Column                            | Description                                                                                                                 | Mandatory |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | :-------: |
+| **linked_resource OR entry_name** | Full name of the BigQuery or PubSub asset the Entry refers to, or an Entry name if you are working with [Custom Entries][4] |    yes    |
+| **template_name**                 | Resource name of the Tag Template for the Tag                                                                               |    yes    |
+| **column**                        | Attach Tags to a column belonging to the Entry schema                                                                       |    no     |
+| **field_id**                      | Id of the Tag field                                                                                                         |    yes    |
+| **field_value**                   | Value of the Tag field                                                                                                      |    yes    |
 
 - *SAMPLE INPUT* 
 
-1. [sample-input/upsert-tags][4] for reference;
-1. [Data Catalog Sample Tags][6] (Google Sheets) might help to create/export a CSV file.
+1. [sample-input/upsert-tags][5] for reference;
+1. [Data Catalog Sample Tags][7] (Google Sheets) might help to create/export a CSV file.
 
 - *COMMANDS* 
 
@@ -145,16 +145,16 @@ docker run --rm --tty \
 The metadata schema to delete Tags is presented below. Use as many lines as needed to delete all
 the Tags you want.
 
-| Column              | Description                                             | Mandatory |
-| ------------------- | ------------------------------------------------------- | :-------: |
-| **linked_resource** | Full name of the asset the Entry refers to              |    yes    |
-| **template_name**   | Resource name of the Tag Template of the Tag            |    yes    |
-| **column**          | Delete Tags from a column belonging to the Entry schema |     no    |
+| Column                            | Description                                                                                                                 | Mandatory |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | :-------: |
+| **linked_resource OR entry_name** | Full name of the BigQuery or PubSub asset the Entry refers to, or an Entry name if you are working with [Custom Entries][4] |    yes    |
+| **template_name**                 | Resource name of the Tag Template of the Tag                                                                                |    yes    |
+| **column**                        | Delete Tags from a column belonging to the Entry schema                                                                     |    no     |
 
 - *SAMPLE INPUT* 
 
-1. [sample-input/delete-tags][5] for reference;
-1. [Data Catalog Sample Tags][6] (Google Sheets) might help to create/export a CSV file.
+1. [sample-input/delete-tags][6] for reference;
+1. [Data Catalog Sample Tags][7] (Google Sheets) might help to create/export a CSV file.
 
 - *COMMANDS* 
 
@@ -176,6 +176,7 @@ docker run --rm --tty \
 [1]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager.svg?style=svg
 [2]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager
 [3]: https://virtualenv.pypa.io/en/latest/
-[4]: https://github.com/ricardolsmendes/datacatalog-tag-manager/tree/master/sample-input/upsert-tags
-[5]: https://github.com/ricardolsmendes/datacatalog-tag-manager/tree/master/sample-input/delete-tags
-[6]: https://docs.google.com/spreadsheets/d/1bqeAXjLHUq0bydRZj9YBhdlDtuu863nwirx8t4EP_CQ
+[4]: https://cloud.google.com/data-catalog/docs/how-to/custom-entries
+[5]: https://github.com/ricardolsmendes/datacatalog-tag-manager/tree/master/sample-input/upsert-tags
+[6]: https://github.com/ricardolsmendes/datacatalog-tag-manager/tree/master/sample-input/delete-tags
+[7]: https://docs.google.com/spreadsheets/d/1bqeAXjLHUq0bydRZj9YBhdlDtuu863nwirx8t4EP_CQ

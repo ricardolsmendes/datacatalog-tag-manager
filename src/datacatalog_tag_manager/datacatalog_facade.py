@@ -29,22 +29,12 @@ class DataCatalogFacade:
             logging.error('Tag not found for Tag Template: %s'
                           ' / Column: %s', tag.template, tag.column)
 
-    def upsert_tag(self, parent_entry_name: str, tag: Tag) -> Tag:
-        entry_tags = self.__datacatalog.list_tags(parent=parent_entry_name)
-
-        try:
-            persisted_tag = next(
-                entry_tag for entry_tag in entry_tags
-                if entry_tag.template == tag.template and entry_tag.column == tag.column)
-            tag.name = persisted_tag.name
-            self.__log_operation_start('UPDATE Tag: %s', tag.name)
-            return self.__datacatalog.update_tag(tag=tag)
-        except StopIteration:
-            self.__log_operation_start('CREATE Tag for: %s', parent_entry_name)
-            logging.info('%sUsing Tag Template: %s', self.__NESTED_LOG_PREFIX, tag.template)
-            created_tag = self.__datacatalog.create_tag(parent=parent_entry_name, tag=tag)
-            logging.info('%sCreated: %s', self.__NESTED_LOG_PREFIX, created_tag.name)
-            return created_tag
+    @lru_cache(maxsize=64)
+    def get_entry(self, name: str) -> Entry:
+        self.__log_operation_start('GET Entry: %s', name)
+        entry = self.__datacatalog.get_entry(name=name)
+        self.__log_single_object_read_result(entry)
+        return entry
 
     @lru_cache(maxsize=16)
     def get_tag_template(self, name: str) -> TagTemplate:
@@ -61,6 +51,23 @@ class DataCatalogFacade:
         entry = self.__datacatalog.lookup_entry(request=lookup_request)
         self.__log_single_object_read_result(entry)
         return entry
+
+    def upsert_tag(self, parent_entry_name: str, tag: Tag) -> Tag:
+        entry_tags = self.__datacatalog.list_tags(parent=parent_entry_name)
+
+        try:
+            persisted_tag = next(
+                entry_tag for entry_tag in entry_tags
+                if entry_tag.template == tag.template and entry_tag.column == tag.column)
+            tag.name = persisted_tag.name
+            self.__log_operation_start('UPDATE Tag: %s', tag.name)
+            return self.__datacatalog.update_tag(tag=tag)
+        except StopIteration:
+            self.__log_operation_start('CREATE Tag for: %s', parent_entry_name)
+            logging.info('%sUsing Tag Template: %s', self.__NESTED_LOG_PREFIX, tag.template)
+            created_tag = self.__datacatalog.create_tag(parent=parent_entry_name, tag=tag)
+            logging.info('%sCreated: %s', self.__NESTED_LOG_PREFIX, created_tag.name)
+            return created_tag
 
     @classmethod
     def __log_operation_start(cls, message, *args):
