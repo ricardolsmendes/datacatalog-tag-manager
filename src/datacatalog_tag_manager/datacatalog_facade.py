@@ -29,6 +29,13 @@ class DataCatalogFacade:
             logging.error('Tag not found for Tag Template: %s'
                           ' / Column: %s', tag.template, tag.column)
 
+    @lru_cache(maxsize=64)
+    def get_entry(self, name: str) -> types.Entry:
+        self.__log_operation_start('GET Entry: %s', name)
+        entry = self.__datacatalog.get_entry(name=name)
+        self.__log_single_object_read_result(entry)
+        return entry
+
     @lru_cache(maxsize=16)
     def get_tag_template(self, name: str) -> types.TagTemplate:
         self.__log_operation_start('GET Tag Template: %s', name)

@@ -42,10 +42,10 @@ Using [virtualenv][3] is optional, but strongly recommended unless you use [Dock
 This is recommended so all related stuff will reside at same place, making it easier to follow
 below instructions.
 
-````bash
+```bash
 mkdir ./datacatalog-tag-manager
 cd ./datacatalog-tag-manager
-````
+```
 
 _All paths starting with `./` in the next steps are relative to the `datacatalog-tag-manager`
 folder._
@@ -70,6 +70,7 @@ Docker may be used as an alternative to run `datacatalog-tag-manager`. In this c
 disregard the [above](#11-python--virtualenv) _virtualenv_ setup instructions.
 
 #### 1.2.1. Get the source code
+
 ```bash
 git clone https://github.com/ricardolsmendes/datacatalog-tag-manager
 cd ./datacatalog-tag-manager
@@ -81,9 +82,10 @@ cd ./datacatalog-tag-manager
 
 - BigQuery Metadata Viewer
 - Data Catalog TagTemplate User
-- A custom role with `bigquery.datasets.updateTag` and `bigquery.tables.updateTag` permissions 
+- A custom role with `bigquery.datasets.updateTag` and `bigquery.tables.updateTag` permissions
 
 #### 1.3.2. Download a JSON key and save it as
+
 - `./credentials/datacatalog-tag-manager.json`
 
 #### 1.3.3. Set the environment variables
@@ -101,19 +103,20 @@ export GOOGLE_APPLICATION_CREDENTIALS=./credentials/datacatalog-tag-manager.json
 The metadata schema to create or update Tags is described below. Use as many lines as needed to
 describe all the Tags and Fields you need.
 
-| Column              | Description                                           | Mandatory |
-| ------------------- | ----------------------------------------------------- | :-------: |
-| **linked_resource** | Full name of the asset the Entry refers to            |    yes    |
-| **template_name**   | Resource name of the Tag Template for the Tag         |    yes    |
-| **column**          | Attach Tags to a column belonging to the Entry schema |     no    |
-| **field_id**        | Id of the Tag field                                   |    yes    |
-| **field_value**     | Value of the Tag field                                |    yes    |
+| Column                            | Description                                                                                                                 | Mandatory |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | :-------: |
+| **linked_resource OR entry_name** | Full name of the BigQuery or PubSub asset the Entry refers to, or an Entry name if you are working with [Custom Entries][4] |    yes    |
+| **template_name**                 | Resource name of the Tag Template for the Tag                                                                               |    yes    |
+| **column**                        | Attach Tags to a column belonging to the Entry schema                                                                       |    no     |
+| **field_id**                      | Id of the Tag field                                                                                                         |    yes    |
+| **field_value**                   | Value of the Tag field                                                                                                      |    yes    |
 
-*TIPS* 
-- [sample-input/upsert-tags][4] for reference;
-- [Data Catalog Sample Tags][6] (Google Sheets) might help to create/export a CSV file.
+_TIPS_
 
-#### 2.1.1. From a CSV file 
+- [sample-input/upsert-tags][5] for reference;
+- [Data Catalog Sample Tags][7] (Google Sheets) might help to create/export a CSV file.
+
+#### 2.1.1. From a CSV file
 
 - Python + virtualenv
 
@@ -135,17 +138,18 @@ docker run --rm --tty \
 The metadata schema to delete Tags is described below. Use as many lines as needed to delete all
 the Tags you want.
 
-| Column              | Description                                             | Mandatory |
-| ------------------- | ------------------------------------------------------- | :-------: |
-| **linked_resource** | Full name of the asset the Entry refers to              |    yes    |
-| **template_name**   | Resource name of the Tag Template of the Tag            |    yes    |
-| **column**          | Delete Tags from a column belonging to the Entry schema |     no    |
+| Column                            | Description                                                                                                                 | Mandatory |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | :-------: |
+| **linked_resource OR entry_name** | Full name of the BigQuery or PubSub asset the Entry refers to, or an Entry name if you are working with [Custom Entries][4] |    yes    |
+| **template_name**                 | Resource name of the Tag Template of the Tag                                                                                |    yes    |
+| **column**                        | Delete Tags from a column belonging to the Entry schema                                                                     |    no     |
 
-*TIPS* 
-- [sample-input/delete-tags][5] for reference;
-- [Data Catalog Sample Tags][6] (Google Sheets) might help to create/export a CSV file.
+_TIPS_
 
-#### 2.2.1. From a CSV file 
+- [sample-input/delete-tags][6] for reference;
+- [Data Catalog Sample Tags][7] (Google Sheets) might help to create/export a CSV file.
+
+#### 2.2.1. From a CSV file
 
 - Python + virtualenv
 
@@ -165,6 +169,7 @@ docker run --rm --tty \
 [1]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager.svg?style=svg
 [2]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager
 [3]: https://virtualenv.pypa.io/en/latest/
-[4]: https://github.com/ricardolsmendes/datacatalog-tag-manager/tree/master/sample-input/upsert-tags
-[5]: https://github.com/ricardolsmendes/datacatalog-tag-manager/tree/master/sample-input/delete-tags
-[6]: https://docs.google.com/spreadsheets/d/1bqeAXjLHUq0bydRZj9YBhdlDtuu863nwirx8t4EP_CQ
+[4]: https://cloud.google.com/data-catalog/docs/how-to/custom-entries
+[5]: https://github.com/ricardolsmendes/datacatalog-tag-manager/tree/master/sample-input/upsert-tags
+[6]: https://github.com/ricardolsmendes/datacatalog-tag-manager/tree/master/sample-input/delete-tags
+[7]: https://docs.google.com/spreadsheets/d/1bqeAXjLHUq0bydRZj9YBhdlDtuu863nwirx8t4EP_CQ

@@ -25,7 +25,7 @@ class TagDatasourceProcessorTest(unittest.TestCase):
     def test_upsert_tags_from_csv_should_succeed(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(
             data={
-                'linked_resource': ['//resource-link'],
+                'linked_resource OR entry_name': ['//bigquery.googleapis.com/resource-name'],
                 'template_name': ['test_template'],
                 'field_id': ['string_field'],
                 'field_value': ['Test value']
@@ -50,7 +50,10 @@ class TagDatasourceProcessorTest(unittest.TestCase):
     def test_upsert_tags_from_csv_missing_values_should_succeed(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(
             data={
-                'linked_resource': ['//resource-link-1', None, '//resource-link-2', None],
+                'linked_resource OR entry_name': [
+                    '//bigquery.googleapis.com/resource-name-1', None,
+                    '//bigquery.googleapis.com/resource-name-2', None
+                ],
                 'template_name': ['test_template', None, 'test_template', None],
                 'field_id': ['bool_field', 'string_field', 'bool_field', 'string_field'],
                 'field_value': ['true', 'Test value 1', 'false', 'Test value 2']
@@ -80,7 +83,7 @@ class TagDatasourceProcessorTest(unittest.TestCase):
                 'field_id': ['string_field'],
                 'template_name': ['test_template'],
                 'field_value': ['Test value'],
-                'linked_resource': ['//resource-link']
+                'linked_resource OR entry_name': ['//bigquery.googleapis.com/resource-name']
             })
 
         datacatalog_facade = self.__datacatalog_facade
@@ -98,7 +101,10 @@ class TagDatasourceProcessorTest(unittest.TestCase):
     def test_upsert_tags_from_csv_column_metadata_should_succeed(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(
             data={
-                'linked_resource': ['//resource-link', '//resource-link'],
+                'linked_resource OR entry_name': [
+                    '//bigquery.googleapis.com/resource-name',
+                    '//bigquery.googleapis.com/resource-name'
+                ],
                 'template_name': ['test_template', 'test_template'],
                 'column': ['test_column', None],
                 'field_id': ['bool_field', 'string_field'],
@@ -127,7 +133,7 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         # Pandas is not aware of the field types, so it reads all empty values as NaN.
         mock_read_csv.return_value = pd.DataFrame(
             data={
-                'linked_resource': ['//resource-link', None],
+                'linked_resource OR entry_name': ['//bigquery.googleapis.com/resource-name', None],
                 'template_name': ['test_template', None],
                 'field_id': ['bool_field', 'string_field'],
                 'field_value': ['true', float('NaN')]
@@ -145,12 +151,42 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertTrue('bool_field' in upserted_tag.fields)
         self.assertFalse('string_field' in upserted_tag.fields)
 
+    def test_upsert_tags_from_csv_invalid_argument_lookup_entry_should_skip_tag(
+            self, mock_read_csv):
+
+        mock_read_csv.return_value = pd.DataFrame(
+            data={
+                'linked_resource OR entry_name': [
+                    '//bigquery.googleapis.com/invalid-resource-name',
+                    '//bigquery.googleapis.com/resource-name'
+                ],
+                'template_name': [None, 'test_template'],
+                'field_id': [None, 'string_field'],
+                'field_value': [None, 'Test value']
+            })
+
+        datacatalog_facade = self.__datacatalog_facade
+        datacatalog_facade.lookup_entry.side_effect = \
+            (exceptions.InvalidArgument(message=''), make_fake_entry())
+        datacatalog_facade.get_tag_template.return_value = make_fake_tag_template()
+        datacatalog_facade.upsert_tag.side_effect = lambda *args: args[1]
+
+        upserted_tags = self.__tag_datasource_processor.upsert_tags_from_csv('file-path')
+        self.assertEqual(1, len(upserted_tags))
+
+        upserted_tag = upserted_tags[0]
+        self.assertEqual('test_template', upserted_tag.template)
+        self.assertEqual('Test value', upserted_tag.fields['string_field'].string_value)
+
     def test_upsert_tags_from_csv_permission_denied_lookup_entry_should_skip_tag(
             self, mock_read_csv):
 
         mock_read_csv.return_value = pd.DataFrame(
             data={
-                'linked_resource': ['//unreachable-resource-link', '//resource-link'],
+                'linked_resource OR entry_name': [
+                    '//bigquery.googleapis.com/unreachable-resource-name',
+                    '//bigquery.googleapis.com/resource-name'
+                ],
                 'template_name': [None, 'test_template'],
                 'field_id': [None, 'string_field'],
                 'field_value': [None, 'Test value']
@@ -169,12 +205,37 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertEqual('test_template', upserted_tag.template)
         self.assertEqual('Test value', upserted_tag.fields['string_field'].string_value)
 
+    def test_upsert_tags_from_csv_permission_denied_get_entry_should_skip_tag(self, mock_read_csv):
+        mock_read_csv.return_value = pd.DataFrame(
+            data={
+                'linked_resource OR entry_name': ['invalid-entry-name', 'entry-name'],
+                'template_name': [None, 'test_template'],
+                'field_id': [None, 'string_field'],
+                'field_value': [None, 'Test value']
+            })
+
+        datacatalog_facade = self.__datacatalog_facade
+        datacatalog_facade.get_entry.side_effect = \
+            (exceptions.PermissionDenied(message=''), make_fake_entry())
+        datacatalog_facade.get_tag_template.return_value = make_fake_tag_template()
+        datacatalog_facade.upsert_tag.side_effect = lambda *args: args[1]
+
+        upserted_tags = self.__tag_datasource_processor.upsert_tags_from_csv('file-path')
+        self.assertEqual(1, len(upserted_tags))
+
+        upserted_tag = upserted_tags[0]
+        self.assertEqual('test_template', upserted_tag.template)
+        self.assertEqual('Test value', upserted_tag.fields['string_field'].string_value)
+
     def test_upsert_tags_from_csv_permission_denied_get_template_should_skip_tag(
             self, mock_read_csv):
 
         mock_read_csv.return_value = pd.DataFrame(
             data={
-                'linked_resource': ['//resource-link', '//resource-link'],
+                'linked_resource OR entry_name': [
+                    '//bigquery.googleapis.com/resource-name',
+                    '//bigquery.googleapis.com/resource-name'
+                ],
                 'template_name': ['unreachable_test_template', 'test_template'],
                 'field_id': [None, 'string_field'],
                 'field_value': [None, 'Test value']
@@ -194,10 +255,11 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertEqual('Test value', upserted_tag.fields['string_field'].string_value)
 
     def test_delete_tags_from_csv_should_succeed(self, mock_read_csv):
-        mock_read_csv.return_value = pd.DataFrame(data={
-            'linked_resource': ['//resource-link'],
-            'template_name': ['test_template']
-        })
+        mock_read_csv.return_value = pd.DataFrame(
+            data={
+                'linked_resource OR entry_name': ['//bigquery.googleapis.com/resource-name'],
+                'template_name': ['test_template']
+            })
 
         tag_name = 'my_tag_name'
         datacatalog_facade = self.__datacatalog_facade

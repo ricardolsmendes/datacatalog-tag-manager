@@ -45,6 +45,12 @@ class DataCatalogFacadeTest(unittest.TestCase):
         datacatalog.list_tags.assert_called_once()
         datacatalog.delete_tag.assert_not_called()
 
+    def test_get_entry_should_call_client_library_method(self):
+        self.__datacatalog_facade.get_entry('entry-name')
+
+        datacatalog = self.__datacatalog_client
+        datacatalog.get_entry.assert_called_once()
+
     def test_get_tag_template_should_call_client_library_method(self):
         self.__datacatalog_facade.get_tag_template('')
 
