@@ -17,30 +17,6 @@ class DataCatalogFacadeTest(unittest.TestCase):
     def test_constructor_should_set_instance_attributes(self):
         self.assertIsNotNone(self.__datacatalog_facade.__dict__['_DataCatalogFacade__datacatalog'])
 
-    def test_upsert_tag_nonexistent_should_create(self):
-        datacatalog = self.__datacatalog_client
-        datacatalog.list_tags.return_value = []
-
-        self.__datacatalog_facade.upsert_tag('entry_name', make_fake_tag())
-
-        datacatalog.list_tags.assert_called_once()
-        datacatalog.create_tag.assert_called_once()
-
-    def test_upsert_tag_pre_existing_should_update(self):
-        tag_1 = make_fake_tag()
-
-        tag_2 = make_fake_tag()
-        tag_2.fields['test_string_field'].string_value = '[UPDATED] Test String Value'
-
-        datacatalog = self.__datacatalog_client
-        datacatalog.list_tags.return_value = [tag_1]
-
-        self.__datacatalog_facade.upsert_tag('entry_name', tag_2)
-
-        datacatalog.list_tags.assert_called_once()
-        datacatalog.update_tag.assert_called_once()
-        datacatalog.update_tag.assert_called_with(tag=tag_2)
-
     def test_delete_tag_should_call_client_library_method(self):
         tag = make_fake_tag()
 
@@ -69,6 +45,12 @@ class DataCatalogFacadeTest(unittest.TestCase):
         datacatalog.list_tags.assert_called_once()
         datacatalog.delete_tag.assert_not_called()
 
+    def test_get_entry_should_call_client_library_method(self):
+        self.__datacatalog_facade.get_entry('entry-name')
+
+        datacatalog = self.__datacatalog_client
+        datacatalog.get_entry.assert_called_once()
+
     def test_get_tag_template_should_call_client_library_method(self):
         self.__datacatalog_facade.get_tag_template('')
 
@@ -80,6 +62,30 @@ class DataCatalogFacadeTest(unittest.TestCase):
 
         datacatalog = self.__datacatalog_client
         datacatalog.lookup_entry.assert_called_once()
+
+    def test_upsert_tag_nonexistent_should_create(self):
+        datacatalog = self.__datacatalog_client
+        datacatalog.list_tags.return_value = []
+
+        self.__datacatalog_facade.upsert_tag('entry_name', make_fake_tag())
+
+        datacatalog.list_tags.assert_called_once()
+        datacatalog.create_tag.assert_called_once()
+
+    def test_upsert_tag_pre_existing_should_update(self):
+        tag_1 = make_fake_tag()
+
+        tag_2 = make_fake_tag()
+        tag_2.fields['test_string_field'].string_value = '[UPDATED] Test String Value'
+
+        datacatalog = self.__datacatalog_client
+        datacatalog.list_tags.return_value = [tag_1]
+
+        self.__datacatalog_facade.upsert_tag('entry_name', tag_2)
+
+        datacatalog.list_tags.assert_called_once()
+        datacatalog.update_tag.assert_called_once()
+        datacatalog.update_tag.assert_called_with(tag=tag_2)
 
 
 def make_fake_tag():

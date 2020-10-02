@@ -1,5 +1,6 @@
 import logging
 import math
+import re
 from typing import List
 
 from google.api_core import exceptions
@@ -64,29 +65,52 @@ class TagDatasourceProcessor:
 
     def __process_tags_from_dataframe(self, dataframe, processor):
         normalized_df = self.__normalize_dataframe(dataframe)
-        normalized_df.set_index(constant.TAGS_DS_LINKED_RESOURCE_COLUMN_LABEL, inplace=True)
+        normalized_df.set_index(constant.TAGS_DS_LINKED_RESOURCE_ENTRY_NAME_COLUMN_LABEL,
+                                inplace=True)
 
         results = []
-        for linked_resource in normalized_df.index.unique().tolist():
-            try:
-                catalog_entry = self.__datacatalog_facade.lookup_entry(linked_resource)
-            except exceptions.PermissionDenied:
+        for entry_name_or_resource in normalized_df.index.unique().tolist():
+            catalog_entry = self.__find_entry(entry_name_or_resource)
+            if not catalog_entry:
                 logging.warning(
-                    'Permission denied when looking up Entry for %s.'
-                    ' The resource will be skipped.', linked_resource)
+                    'No Entry found for name or linked resource %s.'
+                    ' The record will be skipped.', entry_name_or_resource)
                 continue
 
             templates_subset = \
-                normalized_df.loc[[linked_resource], constant.TAGS_DS_TEMPLATE_NAME_COLUMN_LABEL:]
+                normalized_df.loc[
+                    [entry_name_or_resource], constant.TAGS_DS_TEMPLATE_NAME_COLUMN_LABEL:
+                ]
 
             # Save memory by deleting data already copied to a subset.
-            normalized_df.drop(linked_resource, inplace=True)
+            normalized_df.drop(entry_name_or_resource, inplace=True)
 
             tags = self.__make_tags_from_templates_dataframe(templates_subset)
 
             results.extend([processor(catalog_entry.name, tag) for tag in tags])
 
         return results
+
+    def __find_entry(self, name_or_resource: str) -> types.Entry:
+        should_use_lookup = re.match(pattern=constant.BIGQUERY_LINKED_RESOURCE_PATTERN,
+                                     string=name_or_resource)
+        should_use_lookup = should_use_lookup or re.match(
+            pattern=constant.PUBSUB_LINKED_RESOURCE_PATTERN, string=name_or_resource)
+
+        if should_use_lookup:
+            try:
+                return self.__datacatalog_facade.lookup_entry(name_or_resource)
+            except exceptions.InvalidArgument:
+                logging.warning('Invalid argument when looking up Entry for %s.', name_or_resource)
+            except exceptions.PermissionDenied:
+                logging.warning('Permission denied when looking up Entry for %s.',
+                                name_or_resource)
+            return
+
+        try:
+            return self.__datacatalog_facade.get_entry(name_or_resource)
+        except exceptions.PermissionDenied:
+            logging.warning('Permission denied when getting Entry %s.', name_or_resource)
 
     @classmethod
     def __normalize_dataframe(cls, dataframe):
