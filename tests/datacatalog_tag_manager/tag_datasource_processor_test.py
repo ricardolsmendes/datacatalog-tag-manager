@@ -207,7 +207,6 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertEqual('Test value', upserted_tag.fields['string_field'].string_value)
 
     def test_upsert_tags_from_csv_permission_denied_get_entry_should_skip_tag(self, mock_read_csv):
-
         mock_read_csv.return_value = pd.DataFrame(
             data={
                 'linked_resource OR entry_name': ['invalid-entry-name', 'entry-name'],
