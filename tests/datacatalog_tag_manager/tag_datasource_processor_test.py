@@ -175,9 +175,9 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         upserted_tags = self.__tag_datasource_processor.upsert_tags_from_csv('file-path')
         self.assertEqual(1, len(upserted_tags))
 
-        created_tag = upserted_tags[0]
-        self.assertEqual('test_template', created_tag.template)
-        self.assertEqual('Test value', created_tag.fields['string_field'].string_value)
+        upserted_tag = upserted_tags[0]
+        self.assertEqual('test_template', upserted_tag.template)
+        self.assertEqual('Test value', upserted_tag.fields['string_field'].string_value)
 
     def test_upsert_tags_from_csv_permission_denied_lookup_entry_should_skip_tag(
             self, mock_read_csv):
@@ -224,9 +224,9 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         upserted_tags = self.__tag_datasource_processor.upsert_tags_from_csv('file-path')
         self.assertEqual(1, len(upserted_tags))
 
-        created_tag = upserted_tags[0]
-        self.assertEqual('test_template', created_tag.template)
-        self.assertEqual('Test value', created_tag.fields['string_field'].string_value)
+        upserted_tag = upserted_tags[0]
+        self.assertEqual('test_template', upserted_tag.template)
+        self.assertEqual('Test value', upserted_tag.fields['string_field'].string_value)
 
     def test_upsert_tags_from_csv_permission_denied_get_template_should_skip_tag(
             self, mock_read_csv):
