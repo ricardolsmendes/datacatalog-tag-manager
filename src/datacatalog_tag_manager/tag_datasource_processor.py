@@ -191,6 +191,8 @@ class TagDatasourceProcessor:
         fields = {}
         for record in records:
             value = record[constant.TAGS_DS_FIELD_VALUE_COLUMN_LABEL]
+            # Pandas is not aware of the field types and reads empty values as NaN;
+            # hence NaN fields are skipped.
             if isinstance(value, float) and math.isnan(value):
                 continue
 
