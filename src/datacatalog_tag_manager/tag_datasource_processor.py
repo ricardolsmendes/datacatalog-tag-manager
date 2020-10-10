@@ -1,7 +1,7 @@
 import logging
 import math
 import re
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from google.api_core import exceptions
 from google.cloud.datacatalog import Entry, Tag
@@ -183,17 +183,17 @@ class TagDatasourceProcessor:
             tag_template, cls.__convert_fields_dataframe_to_dict(dataframe), column)
 
     @classmethod
-    def __convert_fields_dataframe_to_dict(cls, dataframe):
+    def __convert_fields_dataframe_to_dict(cls, dataframe) -> Dict[str, object]:
         # Remove the rows with no field id since they're not valid from this point
         dataframe.dropna(subset=[constant.TAGS_DS_FIELD_ID_COLUMN_LABEL], inplace=True)
         records = dataframe.to_dict(orient='records')
 
-        id_to_value_map = {}
+        fields = {}
         for record in records:
             value = record[constant.TAGS_DS_FIELD_VALUE_COLUMN_LABEL]
             if isinstance(value, float) and math.isnan(value):
                 continue
 
-            id_to_value_map[record[constant.TAGS_DS_FIELD_ID_COLUMN_LABEL]] = value
+            fields[record[constant.TAGS_DS_FIELD_ID_COLUMN_LABEL]] = value
 
-        return id_to_value_map
+        return fields

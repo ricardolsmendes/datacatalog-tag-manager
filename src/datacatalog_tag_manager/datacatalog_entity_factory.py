@@ -13,7 +13,7 @@ class DataCatalogEntityFactory:
     @classmethod
     def make_tag(cls,
                  tag_template: TagTemplate,
-                 fields_dict: Dict[str, object],
+                 fields: Dict[str, object],
                  column: str = None) -> Tag:
 
         tag = datacatalog.Tag()
@@ -22,35 +22,37 @@ class DataCatalogEntityFactory:
         if column:
             tag.column = column
 
-        cls.__set_tag_fields(tag, tag_template, fields_dict)
+        cls.__set_tag_fields(tag, tag_template, fields)
 
         return tag
 
     @classmethod
-    def __set_tag_fields(cls, tag, tag_template, fields_dict):
-        valid_fields_dict = cls.__get_valid_tag_fields_dict(tag_template, fields_dict)
-        for field_id, field_value in valid_fields_dict.items():
+    def __set_tag_fields(cls, tag: Tag, tag_template: TagTemplate, fields: Dict[str, object]):
+        valid_fields = cls.__get_valid_tag_fields(tag_template, fields)
+        for field_id, field_value in valid_fields.items():
             field = datacatalog.TagField()
             field_type = tag_template.fields[field_id].type
             cls.__set_field_value(field, field_type, field_value)
             tag.fields[field_id] = field
 
     @classmethod
-    def __get_valid_tag_fields_dict(cls, tag_template, fields_dict):
-        valid_fields_dict = {}
+    def __get_valid_tag_fields(cls, tag_template: TagTemplate,
+                               fields: Dict[str, object]) -> Dict[str, object]:
 
-        if not fields_dict:
-            return valid_fields_dict
+        valid_fields = {}
 
-        for field_id, field_value in fields_dict.items():
+        if not fields:
+            return valid_fields
+
+        for field_id, field_value in fields.items():
             if field_id in tag_template.fields:
-                valid_fields_dict[field_id] = field_value
+                valid_fields[field_id] = field_value
             else:
                 logging.warning(
                     'Field %s (%s) was not found in the Tag Template %s and will be ignored.',
                     field_id, str(field_value), tag_template.name)
 
-        return valid_fields_dict
+        return valid_fields
 
     @classmethod
     def __set_field_value(cls, field, template_field_type, value):
