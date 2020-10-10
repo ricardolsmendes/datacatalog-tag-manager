@@ -124,7 +124,6 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         self.assertFalse('string_field' in upserted_tag_2.fields)
 
     def test_upsert_tags_from_csv_should_skip_nan_field_values(self, mock_read_csv):
-        # Pandas is not aware of the field types, so it reads all empty values as NaN.
         mock_read_csv.return_value = pd.DataFrame(
             data={
                 'linked_resource': ['//resource-link', None],
