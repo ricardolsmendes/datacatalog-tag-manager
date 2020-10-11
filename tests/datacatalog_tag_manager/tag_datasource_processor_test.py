@@ -1,3 +1,4 @@
+import math
 import unittest
 from unittest import mock
 
@@ -11,8 +12,7 @@ import datacatalog_tag_manager
 @mock.patch('datacatalog_tag_manager.tag_datasource_processor.pd.read_csv')
 class TagDatasourceProcessorTest(unittest.TestCase):
     # Pandas is not aware of the field types and reads empty values as NaN;
-    # thus, NaN is used in the mocked dataframes to set up more realistic testing scenarios.
-    __NAN = float('NaN')
+    # thus, math.nan is used in the mocked dataframes to set up more realistic testing scenarios.
 
     @mock.patch(
         'datacatalog_tag_manager.tag_datasource_processor.datacatalog_facade.DataCatalogFacade')
@@ -54,10 +54,10 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         mock_read_csv.return_value = pd.DataFrame(
             data={
                 'linked_resource OR entry_name': [
-                    '//bigquery.googleapis.com/resource-name-1', self.__NAN,
-                    '//bigquery.googleapis.com/resource-name-2', self.__NAN
+                    '//bigquery.googleapis.com/resource-name-1', math.nan,
+                    '//bigquery.googleapis.com/resource-name-2', math.nan
                 ],
-                'template_name': ['test_template', self.__NAN, 'test_template', self.__NAN],
+                'template_name': ['test_template', math.nan, 'test_template', math.nan],
                 'field_id': ['bool_field', 'string_field', 'bool_field', 'string_field'],
                 'field_value': ['true', 'Test value 1', 'false', 'Test value 2']
             })
@@ -109,7 +109,7 @@ class TagDatasourceProcessorTest(unittest.TestCase):
                     '//bigquery.googleapis.com/resource-name'
                 ],
                 'template_name': ['test_template', 'test_template'],
-                'column': ['test_column', self.__NAN],
+                'column': ['test_column', math.nan],
                 'field_id': ['bool_field', 'string_field'],
                 'field_value': ['true', 'Test value']
             })
@@ -136,10 +136,10 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         mock_read_csv.return_value = pd.DataFrame(
             data={
                 'linked_resource OR entry_name':
-                ['//bigquery.googleapis.com/resource-name', self.__NAN],
-                'template_name': ['test_template', self.__NAN],
+                ['//bigquery.googleapis.com/resource-name', math.nan],
+                'template_name': ['test_template', math.nan],
                 'field_id': ['bool_field', 'string_field'],
-                'field_value': ['true', self.__NAN]
+                'field_value': ['true', math.nan]
             })
 
         datacatalog_facade = self.__datacatalog_facade
@@ -163,9 +163,9 @@ class TagDatasourceProcessorTest(unittest.TestCase):
                     '//bigquery.googleapis.com/invalid-resource-name',
                     '//bigquery.googleapis.com/resource-name'
                 ],
-                'template_name': [self.__NAN, 'test_template'],
-                'field_id': [self.__NAN, 'string_field'],
-                'field_value': [self.__NAN, 'Test value']
+                'template_name': [math.nan, 'test_template'],
+                'field_id': [math.nan, 'string_field'],
+                'field_value': [math.nan, 'Test value']
             })
 
         datacatalog_facade = self.__datacatalog_facade
@@ -190,9 +190,9 @@ class TagDatasourceProcessorTest(unittest.TestCase):
                     '//bigquery.googleapis.com/unreachable-resource-name',
                     '//bigquery.googleapis.com/resource-name'
                 ],
-                'template_name': [self.__NAN, 'test_template'],
-                'field_id': [self.__NAN, 'string_field'],
-                'field_value': [self.__NAN, 'Test value']
+                'template_name': [math.nan, 'test_template'],
+                'field_id': [math.nan, 'string_field'],
+                'field_value': [math.nan, 'Test value']
             })
 
         datacatalog_facade = self.__datacatalog_facade
@@ -212,9 +212,9 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         mock_read_csv.return_value = pd.DataFrame(
             data={
                 'linked_resource OR entry_name': ['invalid-entry-name', 'entry-name'],
-                'template_name': [self.__NAN, 'test_template'],
-                'field_id': [self.__NAN, 'string_field'],
-                'field_value': [self.__NAN, 'Test value']
+                'template_name': [math.nan, 'test_template'],
+                'field_id': [math.nan, 'string_field'],
+                'field_value': [math.nan, 'Test value']
             })
 
         datacatalog_facade = self.__datacatalog_facade
@@ -240,8 +240,8 @@ class TagDatasourceProcessorTest(unittest.TestCase):
                     '//bigquery.googleapis.com/resource-name'
                 ],
                 'template_name': ['unreachable_test_template', 'test_template'],
-                'field_id': [self.__NAN, 'string_field'],
-                'field_value': [self.__NAN, 'Test value']
+                'field_id': [math.nan, 'string_field'],
+                'field_value': [math.nan, 'Test value']
             })
 
         datacatalog_facade = self.__datacatalog_facade
