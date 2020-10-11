@@ -10,7 +10,9 @@ import datacatalog_tag_manager
 
 @mock.patch('datacatalog_tag_manager.tag_datasource_processor.pd.read_csv')
 class TagDatasourceProcessorTest(unittest.TestCase):
-    __EMPTY_VALUE = float('NaN')
+    # Pandas is not aware of the field types and reads empty values as NaN;
+    # thus, NaN is used in the mocked dataframes to set up more realistic testing scenarios.
+    __NAN = float('NaN')
 
     @mock.patch(
         'datacatalog_tag_manager.tag_datasource_processor.datacatalog_facade.DataCatalogFacade')
@@ -52,9 +54,8 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         mock_read_csv.return_value = pd.DataFrame(
             data={
                 'linked_resource':
-                ['//resource-link-1', self.__EMPTY_VALUE, '//resource-link-2', self.__EMPTY_VALUE],
-                'template_name':
-                ['test_template', self.__EMPTY_VALUE, 'test_template', self.__EMPTY_VALUE],
+                ['//resource-link-1', self.__NAN, '//resource-link-2', self.__NAN],
+                'template_name': ['test_template', self.__NAN, 'test_template', self.__NAN],
                 'field_id': ['bool_field', 'string_field', 'bool_field', 'string_field'],
                 'field_value': ['true', 'Test value 1', 'false', 'Test value 2']
             })
@@ -103,7 +104,7 @@ class TagDatasourceProcessorTest(unittest.TestCase):
             data={
                 'linked_resource': ['//resource-link', '//resource-link'],
                 'template_name': ['test_template', 'test_template'],
-                'column': ['test_column', self.__EMPTY_VALUE],
+                'column': ['test_column', self.__NAN],
                 'field_id': ['bool_field', 'string_field'],
                 'field_value': ['true', 'Test value']
             })
@@ -129,8 +130,8 @@ class TagDatasourceProcessorTest(unittest.TestCase):
     def test_upsert_tags_from_csv_should_skip_nan_field_values(self, mock_read_csv):
         mock_read_csv.return_value = pd.DataFrame(
             data={
-                'linked_resource': ['//resource-link', self.__EMPTY_VALUE],
-                'template_name': ['test_template', self.__EMPTY_VALUE],
+                'linked_resource': ['//resource-link', self.__NAN],
+                'template_name': ['test_template', self.__NAN],
                 'field_id': ['bool_field', 'string_field'],
                 'field_value': ['true', float('NaN')]
             })
@@ -153,9 +154,9 @@ class TagDatasourceProcessorTest(unittest.TestCase):
         mock_read_csv.return_value = pd.DataFrame(
             data={
                 'linked_resource': ['//unreachable-resource-link', '//resource-link'],
-                'template_name': [self.__EMPTY_VALUE, 'test_template'],
-                'field_id': [self.__EMPTY_VALUE, 'string_field'],
-                'field_value': [self.__EMPTY_VALUE, 'Test value']
+                'template_name': [self.__NAN, 'test_template'],
+                'field_id': [self.__NAN, 'string_field'],
+                'field_value': [self.__NAN, 'Test value']
             })
 
         datacatalog_facade = self.__datacatalog_facade
@@ -178,8 +179,8 @@ class TagDatasourceProcessorTest(unittest.TestCase):
             data={
                 'linked_resource': ['//resource-link', '//resource-link'],
                 'template_name': ['unreachable_test_template', 'test_template'],
-                'field_id': [self.__EMPTY_VALUE, 'string_field'],
-                'field_value': [self.__EMPTY_VALUE, 'Test value']
+                'field_id': [self.__NAN, 'string_field'],
+                'field_value': [self.__NAN, 'Test value']
             })
 
         datacatalog_facade = self.__datacatalog_facade
