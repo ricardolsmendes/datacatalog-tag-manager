@@ -5,6 +5,13 @@ sources. Currently supports the CSV file format.
 
 [![CircleCI][1]][2]
 
+<!--
+  DO NOT UPDATE THE TABLE OF CONTENTS MANUALLY
+  run `npx markdown-toc -i README.md`.
+
+  Please stick to 120-character line wraps as much as you can.
+-->
+
 ## Table of Contents
 
 <!-- toc -->
@@ -28,6 +35,8 @@ sources. Currently supports the CSV file format.
     + [2.2.1. From a CSV file](#221-from-a-csv-file)
 
 <!-- tocstop -->
+
+---
 
 ## 1. Environment setup
 
