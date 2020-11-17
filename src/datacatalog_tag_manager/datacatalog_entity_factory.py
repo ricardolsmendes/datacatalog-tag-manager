@@ -8,6 +8,7 @@ from google.protobuf import timestamp_pb2
 
 
 class DataCatalogEntityFactory:
+    __DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'
     __TRUTHS = {1, '1', 't', 'T', 'true', 'True', 'TRUE'}
 
     @classmethod
@@ -114,7 +115,7 @@ class DataCatalogEntityFactory:
         :param field: The field.
         :param value: A datetime or datetime-like string value.
         """
-        dt = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S%z') if isinstance(value, str) else value
+        dt = datetime.strptime(value, cls.__DATETIME_FORMAT) if isinstance(value, str) else value
         timestamp = timestamp_pb2.Timestamp()
         timestamp.FromDatetime(dt)
         field.timestamp_value = timestamp
