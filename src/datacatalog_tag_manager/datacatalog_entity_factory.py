@@ -32,7 +32,7 @@ class DataCatalogEntityFactory:
         valid_fields = cls.__get_valid_tag_fields(tag_template, fields)
         for field_id, field_value in valid_fields.items():
             field = datacatalog.TagField()
-            field_type = tag_template.fields[field_id].type
+            field_type = tag_template.fields[field_id].type_
             cls.__set_field_value(field, field_type, field_value)
             tag.fields[field_id] = field
 
