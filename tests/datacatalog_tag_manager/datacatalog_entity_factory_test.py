@@ -127,7 +127,7 @@ class DataCatalogEntityFactoryTest(unittest.TestCase):
 
 def make_primitive_type_template_field(primitive_type: FieldType.PrimitiveType):
     field = datacatalog.TagTemplateField()
-    field.type.primitive_type = primitive_type
+    field.type_.primitive_type = primitive_type
 
     return field
 
@@ -137,6 +137,6 @@ def make_enum_type_template_field(values: List[str]):
     for value in values:
         enum_value = datacatalog.FieldType.EnumType.EnumValue()
         enum_value.display_name = value
-        field.type.enum_type.allowed_values.append(enum_value)
+        field.type_.enum_type.allowed_values.append(enum_value)
 
     return field

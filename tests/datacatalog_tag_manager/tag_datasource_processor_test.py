@@ -302,6 +302,6 @@ def make_fake_tag_template():
 
 def make_primitive_type_template_field(primitive_type: FieldType.PrimitiveType):
     field = datacatalog.TagTemplateField()
-    field.type.primitive_type = primitive_type
+    field.type_.primitive_type = primitive_type
 
     return field
