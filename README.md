@@ -3,7 +3,8 @@
 A Python package to manage Google Cloud Data Catalog tags, loading metadata from external
 sources. Currently supports the CSV file format.
 
-[![CircleCI][1]][2]
+![Continuous Integration][1]
+![Continuous Delivery][2]
 
 <!--
   DO NOT UPDATE THE TABLE OF CONTENTS MANUALLY
@@ -182,8 +183,8 @@ docker run --rm --tty \
   datacatalog-tag-manager delete --csv-file /data/<CSV-FILE-PATH>
 ```
 
-[1]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager.svg?style=svg
-[2]: https://circleci.com/gh/ricardolsmendes/datacatalog-tag-manager
+[1]: https://github.com/ricardolsmendes/datacatalog-tag-manager/workflows/Continuous%20Integration/badge.svg
+[2]: https://github.com/ricardolsmendes/datacatalog-tag-manager/workflows/Continuous%20Delivery/badge.svg
 [3]: https://virtualenv.pypa.io/en/latest/
 [4]: https://cloud.google.com/data-catalog/docs/how-to/custom-entries
 [5]: https://github.com/ricardolsmendes/datacatalog-tag-manager/tree/master/sample-input/upsert-tags
