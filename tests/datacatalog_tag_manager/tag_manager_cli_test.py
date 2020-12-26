@@ -16,14 +16,14 @@ class TagManagerCLITest(unittest.TestCase):
 
     @mock.patch(f'{__CLI_CLASS}._TagManagerCLI__upsert_tags')
     @mock.patch(f'{__CLI_CLASS}._parse_args')
-    def test_run_upsert_tags_should_call_upsert_tags(self, mock_parse_args, mock_upsert_tags):
+    def test_run_upsert_should_call_upsert_tags(self, mock_parse_args, mock_upsert_tags):
         mock_parse_args.return_value.func = mock_upsert_tags
         tag_manager_cli.TagManagerCLI.run([])
         mock_upsert_tags.assert_called_once_with(mock_parse_args.return_value)
 
     @mock.patch(f'{__CLI_CLASS}._TagManagerCLI__delete_tags')
     @mock.patch(f'{__CLI_CLASS}._parse_args')
-    def test_run_delete_tags_should_call_delete_tags(self, mock_parse_args, mock_delete_tags):
+    def test_run_delete_should_call_delete_tags(self, mock_parse_args, mock_delete_tags):
         mock_parse_args.return_value.func = mock_delete_tags
         tag_manager_cli.TagManagerCLI.run([])
         mock_delete_tags.assert_called_once_with(mock_parse_args.return_value)
@@ -35,27 +35,27 @@ class TagManagerCLITest(unittest.TestCase):
     def test_parse_args_invalid_subcommand_should_raise_system_exit(self):
         self.assertRaises(SystemExit, tag_manager_cli.TagManagerCLI._parse_args, ['create'])
 
-    def test_parse_args_upsert_tags_missing_mandatory_args_should_raise_system_exit(self):
+    def test_parse_args_upsert_missing_mandatory_args_should_raise_system_exit(self):
         self.assertRaises(SystemExit, tag_manager_cli.TagManagerCLI._parse_args, ['upsert'])
 
-    def test_parse_args_upsert_tags_should_parse_mandatory_args(self):
+    def test_parse_args_upsert_should_parse_mandatory_args(self):
         args = tag_manager_cli.TagManagerCLI._parse_args(['upsert', '--csv-file', 'test.csv'])
         self.assertEqual('test.csv', args.csv_file)
 
     @mock.patch(f'{__CLI_CLASS}._TagManagerCLI__upsert_tags')
-    def test_parse_args_upsert_tags_should_set_default_function(self, mock_upsert_tags):
+    def test_parse_args_upsert_should_set_default_function(self, mock_upsert_tags):
         args = tag_manager_cli.TagManagerCLI._parse_args(['upsert', '--csv-file', 'test.csv'])
         self.assertEqual(mock_upsert_tags, args.func)
 
-    def test_parse_args_delete_tags_missing_mandatory_args_should_raise_system_exit(self):
+    def test_parse_args_delete_missing_mandatory_args_should_raise_system_exit(self):
         self.assertRaises(SystemExit, tag_manager_cli.TagManagerCLI._parse_args, ['delete'])
 
-    def test_parse_args_delete_tags_should_parse_mandatory_args(self):
+    def test_parse_args_delete_should_parse_mandatory_args(self):
         args = tag_manager_cli.TagManagerCLI._parse_args(['delete', '--csv-file', 'test.csv'])
         self.assertEqual('test.csv', args.csv_file)
 
     @mock.patch(f'{__CLI_CLASS}._TagManagerCLI__delete_tags')
-    def test_parse_args_delete_tags_should_set_default_function(self, mock_delete_tags):
+    def test_parse_args_delete_should_set_default_function(self, mock_delete_tags):
         args = tag_manager_cli.TagManagerCLI._parse_args(['delete', '--csv-file', 'test.csv'])
         self.assertEqual(mock_delete_tags, args.func)
 
