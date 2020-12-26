@@ -20,7 +20,7 @@ setuptools.setup(
     include_package_data=True,
     install_requires=(
         'google-cloud-datacatalog >= 1.0.0, < 2.0.0',
-        'pandas ~= 1.1',
+        'pandas ~= 1.1.4',
     ),
     setup_requires=('pytest-runner', ),
     tests_require=('pytest-cov', ),
