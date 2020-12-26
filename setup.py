@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name='datacatalog-tag-manager',
-    version='2.0.5',
+    version='2.0.6',
     url='https://github.com/ricardolsmendes/datacatalog-tag-manager',
     author='Ricardo Mendes',
     author_email='ricardolsmendes@gmail.com',
@@ -19,7 +19,7 @@ setuptools.setup(
     },
     include_package_data=True,
     install_requires=(
-        'google-cloud-datacatalog >= 1.0.0, < 2.0.0',
+        'google-cloud-datacatalog ~= 1.0',
         'numpy ~= 1.19.4',
         'pandas ~= 1.1.4',
     ),
