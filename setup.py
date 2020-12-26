@@ -20,7 +20,7 @@ setuptools.setup(
     include_package_data=True,
     install_requires=(
         'google-cloud-datacatalog ~= 3.0',
-        'numpy ~= 1.19.4',
+        'numpy >= 1.19.0, <= 1.19.3',
         'pandas ~= 1.1.4',
     ),
     setup_requires=('pytest-runner', ),
