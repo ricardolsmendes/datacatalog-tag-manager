@@ -10,7 +10,7 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
-  deploy:
+  publish-to-pypi:
     runs-on: ubuntu-latest
 
     steps:
