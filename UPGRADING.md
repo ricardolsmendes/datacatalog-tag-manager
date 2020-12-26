@@ -1,8 +1,8 @@
-# Beta Version Migration Guide
+# 2.2.x Migration Guide
 
-The beta version of `datacatalog-tag-manager`, based on the current state of the `master` branch,
+The 2.2 release of `datacatalog-tag-manager`, based on the current state of the `master` branch,
 depends on `google-cloud-datacatalog` version `3.0.0+`. Upgrading `google-cloud-datacatalog` is
-expected to be the only required change to use the beta version of this library.
+expected to be the only required change to use the latest version of this library.
 
 If you experience issues or have questions, please file an [issue][2].
 
