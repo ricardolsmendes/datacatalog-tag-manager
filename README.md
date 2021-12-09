@@ -122,11 +122,11 @@ describe all the Tags and Fields you need.
 
 | Column                            | Description                                                                                                                 | Mandatory |
 | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | :-------: |
-| **linked_resource OR entry_name** | Full name of the BigQuery or PubSub asset the Entry refers to, or an Entry name if you are working with [Custom Entries][2] |    yes    |
-| **template_name**                 | Resource name of the Tag Template for the Tag                                                                               |    yes    |
-| **column**                        | Attach Tags to a column belonging to the Entry schema                                                                       |    no     |
-| **field_id**                      | Id of the Tag field                                                                                                         |    yes    |
-| **field_value**                   | Value of the Tag field                                                                                                      |    yes    |
+| **linked_resource OR entry_name** | Full name of the BigQuery or PubSub asset the Entry refers to, or an Entry name if you are working with [Custom Entries][2] |  &check;  |
+| **template_name**                 | Resource name of the Tag Template for the Tag                                                                               |  &check;  |
+| **column**                        | Attach Tags to a column belonging to the Entry schema                                                                       |  &cross;  |
+| **field_id**                      | Id of the Tag field                                                                                                         |  &check;  |
+| **field_value**                   | Value of the Tag field                                                                                                      |  &check;  |
 
 - _SAMPLE INPUT_
 
@@ -161,9 +161,9 @@ the Tags you want.
 
 | Column                            | Description                                                                                                                 | Mandatory |
 | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | :-------: |
-| **linked_resource OR entry_name** | Full name of the BigQuery or PubSub asset the Entry refers to, or an Entry name if you are working with [Custom Entries][2] |    yes    |
-| **template_name**                 | Resource name of the Tag Template of the Tag                                                                                |    yes    |
-| **column**                        | Delete Tags from a column belonging to the Entry schema                                                                     |    no     |
+| **linked_resource OR entry_name** | Full name of the BigQuery or PubSub asset the Entry refers to, or an Entry name if you are working with [Custom Entries][2] |  &check;  |
+| **template_name**                 | Resource name of the Tag Template of the Tag                                                                                |  &check;  |
+| **column**                        | Delete Tags from a column belonging to the Entry schema                                                                     |  &cross;  |
 
 - _SAMPLE INPUT_
 
