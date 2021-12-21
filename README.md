@@ -55,8 +55,8 @@ Using [virtualenv][1] is optional, but strongly recommended unless you use [Dock
 
 #### 1.1.2. Create a folder
 
-This is recommended so all related stuff will reside at same place, making it easier to follow
-below instructions.
+This is recommended so all related stuff will reside at the same place, making it easier to follow
+the next instructions.
 
 ```sh
 mkdir ./datacatalog-tag-manager
@@ -149,7 +149,7 @@ datacatalog-tags upsert --csv-file <CSV-FILE-PATH>
 ```sh
 docker build --rm --tag datacatalog-tag-manager .
 docker run --rm --tty \
-  --volume <CREDENTIALS-FILE-FOLDER>:/credentials --volume <CSV-FILE-FOLDER>:/data \
+  --volume <CREDENTIALS-FILE-DIR>:/credentials --volume <CSV-FILE-DIR>:/data \
   datacatalog-tag-manager upsert --csv-file /data/<CSV-FILE-PATH>
 ```
 
@@ -186,7 +186,7 @@ datacatalog-tags delete --csv-file <CSV-FILE-PATH>
 ```sh
 docker build --rm --tag datacatalog-tag-manager .
 docker run --rm --tty \
-  --volume <CREDENTIALS-FILE-FOLDER>:/credentials --volume <CSV-FILE-FOLDER>:/data \
+  --volume <CREDENTIALS-FILE-DIR>:/credentials --volume <CSV-FILE-DIR>:/data \
   datacatalog-tag-manager delete --csv-file /data/<CSV-FILE-PATH>
 ```
 
