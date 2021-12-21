@@ -24,7 +24,10 @@ setuptools.setup(
         'pandas ~= 1.1.4',
     ),
     setup_requires=('pytest-runner', ),
-    tests_require=('pytest-cov', ),
+    tests_require=(
+        'pytest-cov',
+        'tomli ~= 1.2.2',
+    ),
     python_requires='>=3.6',
     classifiers=[
         'Development Status :: 3 - Alpha',
