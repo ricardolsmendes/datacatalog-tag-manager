@@ -38,7 +38,7 @@ Currently supports the CSV file format.
   * [2.2. Delete](#22-delete)
     + [2.2.1. From a CSV file](#221-from-a-csv-file)
 - [3. How to contribute](#3-how-to-contribute)
-  * [3.1. Report Issues](#31-report-issues)
+  * [3.1. Report issues](#31-report-issues)
   * [3.2. Contribute code](#32-contribute-code)
 
 <!-- tocstop -->
@@ -195,7 +195,7 @@ docker run --rm --tty \
 Please make sure to take a moment and read the [Code of
 Conduct](https://github.com/ricardolsmendes/datacatalog-tag-manager/blob/master/.github/CODE_OF_CONDUCT.md).
 
-### 3.1. Report Issues
+### 3.1. Report issues
 
 Please report bugs and suggest features via the [GitHub
 Issues](https://github.com/ricardolsmendes/datacatalog-tag-manager/issues).
