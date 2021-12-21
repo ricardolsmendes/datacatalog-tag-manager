@@ -206,7 +206,7 @@ add a comment saying that you encountered the problem as well.
 ### 3.2. Contribute code
 
 Please make sure to read the [Contributing
-Guide](github.com/ricardolsmendes/datacatalog-tag-manager/blob/master/.github/CONTRIBUTING.md)
+Guide](https://github.com/ricardolsmendes/datacatalog-tag-manager/blob/master/.github/CONTRIBUTING.md)
 before making a pull request.
 
 [1]: https://virtualenv.pypa.io/en/latest/
