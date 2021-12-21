@@ -1,7 +1,7 @@
 # datacatalog-tag-manager
 
-A Python package to manage Google Cloud Data Catalog tags, loading metadata from external
-sources. Currently supports the CSV file format.
+A Python package to manage Google Cloud Data Catalog tags, loading metadata from external sources.
+Currently supports the CSV file format.
 
 [![license](https://img.shields.io/github/license/ricardolsmendes/datacatalog-tag-manager.svg)](https://github.com/ricardolsmendes/datacatalog-tag-manager/blob/master/LICENSE)
 [![pypi](https://img.shields.io/pypi/v/datacatalog-tag-manager.svg)](https://pypi.org/project/datacatalog-tag-manager)
@@ -37,6 +37,9 @@ sources. Currently supports the CSV file format.
     + [2.1.1. From a CSV file](#211-from-a-csv-file)
   * [2.2. Delete](#22-delete)
     + [2.2.1. From a CSV file](#221-from-a-csv-file)
+- [3. How to contribute](#3-how-to-contribute)
+  * [3.1. Report issues](#31-report-issues)
+  * [3.2. Contribute code](#32-contribute-code)
 
 <!-- tocstop -->
 
@@ -79,8 +82,8 @@ pip install --upgrade datacatalog-tag-manager
 
 ### 1.2. Docker
 
-_Docker_ may be used as an option to run `datacatalog-tag-manager`. In this case, please
-disregard the [above](#11-python--virtualenv) _virtualenv_ setup instructions.
+_Docker_ may be used as an option to run `datacatalog-tag-manager`. In this case, please disregard
+the [above](#11-python--virtualenv) _virtualenv_ setup instructions.
 
 #### 1.2.1. Get the source code
 
@@ -186,6 +189,25 @@ docker run --rm --tty \
   --volume <CREDENTIALS-FILE-FOLDER>:/credentials --volume <CSV-FILE-FOLDER>:/data \
   datacatalog-tag-manager delete --csv-file /data/<CSV-FILE-PATH>
 ```
+
+## 3. How to contribute
+
+Please make sure to take a moment and read the [Code of
+Conduct](https://github.com/ricardolsmendes/datacatalog-tag-manager/blob/master/.github/CODE_OF_CONDUCT.md).
+
+### 3.1. Report issues
+
+Please report bugs and suggest features via the [GitHub
+Issues](https://github.com/ricardolsmendes/datacatalog-tag-manager/issues).
+
+Before opening an issue, search the tracker for possible duplicates. If you find a duplicate, please
+add a comment saying that you encountered the problem as well.
+
+### 3.2. Contribute code
+
+Please make sure to read the [Contributing
+Guide](github.com/ricardolsmendes/datacatalog-tag-manager/blob/master/.github/CONTRIBUTING.md)
+before making a pull request.
 
 [1]: https://virtualenv.pypa.io/en/latest/
 [2]: https://cloud.google.com/data-catalog/docs/how-to/custom-entries
