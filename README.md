@@ -193,7 +193,7 @@ docker run --rm --tty \
 ## 3. How to contribute
 
 Please make sure to take a moment and read the [Code of
-Conduct](https://https://github.com/ricardolsmendes/datacatalog-tag-manager/blob/master/.github/CODE_OF_CONDUCT.md).
+Conduct](https://github.com/ricardolsmendes/datacatalog-tag-manager/blob/master/.github/CODE_OF_CONDUCT.md).
 
 ### 3.1. Report Issues
 
