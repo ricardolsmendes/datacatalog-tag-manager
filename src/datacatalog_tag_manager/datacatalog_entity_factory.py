@@ -61,7 +61,8 @@ class DataCatalogEntityFactory:
             datacatalog.FieldType.PrimitiveType.BOOL: cls.__set_bool_field_value,
             datacatalog.FieldType.PrimitiveType.DOUBLE: cls.__set_double_field_value,
             datacatalog.FieldType.PrimitiveType.STRING: cls.__set_string_field_value,
-            datacatalog.FieldType.PrimitiveType.TIMESTAMP: cls.__set_timestamp_field_value
+            datacatalog.FieldType.PrimitiveType.TIMESTAMP: cls.__set_timestamp_field_value,
+            datacatalog.FieldType.PrimitiveType.RICHTEXT: cls.__set_richtext_field_value
         }
 
         primitive_type = template_field_type.primitive_type
@@ -119,3 +120,11 @@ class DataCatalogEntityFactory:
         timestamp = timestamp_pb2.Timestamp()
         timestamp.FromDatetime(dt)
         field.timestamp_value = timestamp
+
+    @classmethod
+    def __set_richtext_field_value(cls, field, value):
+        """
+        :param field: The field.
+        :param value: A richtext value.
+        """
+        field.richtext_value = value
