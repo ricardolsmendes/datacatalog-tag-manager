@@ -117,7 +117,7 @@ class DataCatalogEntityFactory:
         :param value: A string value.
         """
         field.string_value = value
-        
+
     @classmethod
     def __set_timestamp_field_value(cls, field, value):
         """

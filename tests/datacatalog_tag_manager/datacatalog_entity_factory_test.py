@@ -69,12 +69,13 @@ class DataCatalogEntityFactoryTest(unittest.TestCase):
         tag_template.fields['test_richtext_field'] = \
             make_primitive_type_template_field(self.__RICHTEXT_TYPE)
 
-        tag_fields = {'test_richtext_field': 'Test [bold blue]RichText[/bold blue] :thumbs_up:'}
+        tag_fields = {'test_richtext_field': 'Test <strong>RichText</strong>'}
 
         tag = datacatalog_entity_factory.DataCatalogEntityFactory.make_tag(
             tag_template, tag_fields)
 
-        self.assertEqual('Test Richtext Value', tag.fields['test_richtext_field'].richtext_value)
+        self.assertEqual('Test <strong>RichText</strong>',
+                         tag.fields['test_richtext_field'].richtext_value)
 
     def test_make_tag_valid_string_value_should_set_field(self):
         tag_template = datacatalog.TagTemplate()
