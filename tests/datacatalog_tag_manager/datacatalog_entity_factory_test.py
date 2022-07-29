@@ -11,6 +11,7 @@ from datacatalog_tag_manager import datacatalog_entity_factory
 class DataCatalogEntityFactoryTest(unittest.TestCase):
     __BOOL_TYPE = datacatalog.FieldType.PrimitiveType.BOOL
     __DOUBLE_TYPE = datacatalog.FieldType.PrimitiveType.DOUBLE
+    __RICHTEXT_TYPE = datacatalog.FieldType.PrimitiveType.RICHTEXT
     __STRING_TYPE = datacatalog.FieldType.PrimitiveType.STRING
     __TIMESTAMP_TYPE = datacatalog.FieldType.PrimitiveType.TIMESTAMP
 
@@ -61,6 +62,19 @@ class DataCatalogEntityFactoryTest(unittest.TestCase):
 
         self.assertEqual(2.5, tag.fields['test_double_field'].double_value)
         self.assertEqual(3.1415, tag.fields['test_double_field_str'].double_value)
+
+    def test_make_tag_valid_richtext_value_should_set_field(self):
+        tag_template = datacatalog.TagTemplate()
+        tag_template.name = 'test_template'
+        tag_template.fields['test_richtext_field'] = \
+            make_primitive_type_template_field(self.__RICHTEXT_TYPE)
+
+        tag_fields = {'test_richtext_field': 'Test [bold blue]RichText[/bold blue] :thumbs_up:'}
+
+        tag = datacatalog_entity_factory.DataCatalogEntityFactory.make_tag(
+            tag_template, tag_fields)
+
+        self.assertEqual('Test Richtext Value', tag.fields['test_richtext_field'].richtext_value)
 
     def test_make_tag_valid_string_value_should_set_field(self):
         tag_template = datacatalog.TagTemplate()
